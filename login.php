@@ -25,7 +25,7 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
       } elseif (strpos($username, 'trainer') === 0) {
         header('Location: dashboard_trainer.php');
       } else {
-        header('Location: dashboard.php'); // default fallback
+        header('Location: index.php'); // default fallback
       }
       exit;
 
