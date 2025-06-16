@@ -33,7 +33,7 @@
 
 
     <!-- Static Sidebar (desktop only) -->
- <div class="col-lg-2 d-none d-lg-block bg-light p-0 flex-shrink-0" style="height: 100vh;">
+ <div class="col-lg-2 d-none d-lg-block bg-light p-0 flex-shrink-0">
 
       <?php include 'includes/menubar.php'; ?>
     </div>
