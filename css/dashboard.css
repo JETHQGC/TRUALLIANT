@@ -1,0 +1,70 @@
+  .kpi-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.5rem 1rem;
+    justify-content: space-between;
+  }
+
+  .kpi-card {
+    flex: 1 1 230px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem 1rem 1rem 1.5rem; /* Extra left padding for space beside the bar */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 50px;
+    transition: 0.3s ease;
+    border-left: 5px solid #f36523; /* 🔶 Orange left border */
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .kpi-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left; /* Ensure text is aligned left */
+  }
+
+  .kpi-card h6 {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #888;
+    margin: 0;
+  }
+
+  .kpi-card h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+  }
+
+  .kpi-sub {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+  }
+
+  .text-success { color: #28a745 !important; }
+  .text-danger { color: #dc3545 !important; }
+
+  .kpi-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #ffe5d3;
+    color: #f36523;
+    padding: 8px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

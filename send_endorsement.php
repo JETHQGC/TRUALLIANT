@@ -1,0 +1,175 @@
+<?php
+session_start();
+include 'includes/conn.php';
+date_default_timezone_set('Asia/Manila');
+header('Content-Type: application/json');
+
+require __DIR__ . '/vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Collect selected IDs
+$ids = $_POST['ids'] ?? [];
+if (empty($ids) || !is_array($ids)) {
+    http_response_code(400);
+    echo json_encode(['message' => 'No applicants selected.']);
+    exit;
+}
+
+$placeholders = implode(',', array_fill(0, count($ids), '?'));
+$sql = "
+SELECT 
+  p.name, 
+  p.phone, 
+  p.birthdate,
+  s.recruiter,
+  s.status,
+  i.bpo_exp,
+  e.shift,
+  e.facilitator,
+  e.confirmation,
+  e.second_confirmation,
+  e.emergency_contact_person,
+  e.emergency_contact_number,
+  e.emergency_contact_address,
+  e.signed_contract,
+  a.link
+FROM endorsement e
+LEFT JOIN source s ON e.source_id = s.source_id
+LEFT JOIN initial_interview i ON s.source_id = i.source_id
+LEFT JOIN personal_info p ON s.source_id = p.source_id
+LEFT JOIN assessment a ON s.source_id = a.source_id
+WHERE s.source_id IN ($placeholders)
+";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param(str_repeat('i', count($ids)), ...$ids);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Separate applicants
+$with_exp = [];
+$no_exp = [];
+
+while ($row = $result->fetch_assoc()) {
+    if (trim($row['bpo_exp']) === 'No BPO Experience') {
+        $no_exp[] = $row;
+    } else {
+        $with_exp[] = $row;
+    }
+}
+
+// Update date_endorsed to current date
+$update = $conn->prepare("UPDATE endorsement SET date_endorsed = CURDATE() WHERE source_id IN ($placeholders)");
+$update->bind_param(str_repeat('i', count($ids)), ...$ids);
+$update->execute();
+$update->close();
+
+
+// Function to render responsive HTML table
+function buildHtmlTable(array $rows, string $title): string {
+    $html = "<h2 style='margin-top:30px; color:#0e1e40;'>{$title}</h2>";
+    $html .= "<div style='overflow-x:auto;'>
+    <table style='min-width:1000px; border-collapse:collapse; font-size:12px; margin-top:10px;'>
+      <thead style='background:#0e1e40; color:#fff;'>
+        <tr>
+          <th style='padding:6px; border:1px solid #ccc;'>Name</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Phone</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Shift</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Facilitator</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Recruiter</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Confirmation</th>
+          <th style='padding:6px; border:1px solid #ccc;'>2nd Conf.</th>
+          <th style='padding:6px; border:1px solid #ccc;'>BPO Exp</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Status</th>
+          <th style='padding:6px; border:1px solid #ccc;'>DOB</th>
+          <th style='padding:6px; border:1px solid #ccc;'>ECP</th>
+          <th style='padding:6px; border:1px solid #ccc;'>EC #</th>
+          <th style='padding:6px; border:1px solid #ccc;'>EC Addr</th>
+          <th style='padding:6px; border:1px solid #ccc;'>Link</th>
+        </tr>
+      </thead>
+      <tbody>";
+
+    foreach ($rows as $r) {
+        $html .= "<tr>";
+        foreach ([
+            'name', 'phone', 'shift', 'facilitator', 'recruiter',
+            'confirmation', 'second_confirmation', 'bpo_exp', 'status',
+            'birthdate', 'emergency_contact_person', 'emergency_contact_number',
+            'emergency_contact_address', 'link'
+        ] as $key) {
+            $cell = htmlspecialchars($r[$key] ?? '');
+            $html .= "<td style='padding:6px; border:1px solid #ccc;'>{$cell}</td>";
+        }
+        $html .= "</tr>";
+    }
+
+    $html .= "</tbody></table></div>";
+    return $html;
+}
+
+// Build email HTML
+$batchTitle = "Batch " . date('Y-m-d');
+$tables = '';
+if (!empty($with_exp)) $tables .= buildHtmlTable($with_exp, "With BPO Experience");
+if (!empty($no_exp))   $tables .= buildHtmlTable($no_exp, "No BPO Experience");
+
+$emailBody = <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Endorsed Applicants</title>
+</head>
+<body style="font-family:Arial, sans-serif; background:#f4f6f8; margin:0; padding:30px;">
+  <div style="max-width:900px; margin:auto; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.05); overflow:hidden;">
+
+    <div style="width:100%;">
+      <img src="https://i.imgur.com/HJAApfe.png" alt="TRUALLIANT Header" style="width:100%; display:block;">
+    </div>
+
+    <div style="padding:30px 30px 10px 30px; text-align:center;">
+      <h1 style="color:#0e1e40; margin-bottom:10px;">Endorsement Report</h1>
+      <p style="color:#555; font-size:16px; margin:0;">{$batchTitle}</p>
+    </div>
+
+    <div style="padding:0 30px 30px 30px;">
+      <p style="font-size:15px; color:#333;">Below is the list of endorsed applicants for training:</p>
+      {$tables}
+      <p style="margin-top:30px; font-size:13px; color:#777;">This report was generated by the TRUALLIANT Recruitment System.</p>
+    </div>
+
+  </div>
+</body>
+</html>
+HTML;
+
+
+// Send email
+$mail = new PHPMailer(true);
+try {
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'jethrodelima.qgc@gmail.com';
+    $mail->Password   = 'wksm kpge jvgb ixqj';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
+
+    $mail->setFrom('jethrodelima.qgc@gmail.com', 'TRUALLIANT Recruitment');
+    $mail->addAddress('reynormerzo.qgc@gmail.com', 'Training Coordinator');
+
+    $mail->isHTML(true);
+    $mail->Subject = "Endorsed Applicants - {$batchTitle}";
+    $mail->Body    = $emailBody;
+
+    $mail->send();
+
+    echo json_encode(['message' => 'Email sent successfully.']);
+} catch (Exception $e) {
+    error_log("Mailer Error: {$mail->ErrorInfo}");
+    http_response_code(500);
+    echo json_encode(['message' => 'Failed to send email.']);
+}
+?>
