@@ -43,23 +43,27 @@
 
           <div class="tab-content">
          <style>
-  /* Add this to your page (e.g. in your <head> or a linked stylesheet) */
-  #detailsTab dt::after {
-    content: ":";
-    margin-right: 0.25rem;
-    color: #666;
-  }
+     /* Colon after dt */
+      #detailsTab dt::after {
+        content: ":";
+        margin-right: 0.25rem;
+        color: #666;
+      }
+
 </style>
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
   <div class="row gx-4">
     <!-- Source Info Panel -->
-    <div class="col-md-6 mb-4">
+ <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-light py-2">
-          <h6 class="mb-0">Source Info</h6>
-        </div>
+           <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
+        Source Information
+        <span style="color: #f36523;">●</span>
+      </h6>
+    </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">ID</dt>
@@ -81,11 +85,14 @@
     </div>
 
     <!-- Personal Info Panel -->
-    <div class="col-md-6 mb-4">
+     <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-light py-2">
-          <h6 class="mb-0">Personal Info</h6>
-        </div>
+          <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
+        Personal Information
+        <span style="color: #f36523;">●</span>
+      </h6>
+    </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">Name</dt>
@@ -216,8 +223,13 @@
 
         <!-- Modal Footer -->
         <div class="modal-footer border-0">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" 
+            style="background-color: #0e1e40; border-color: #0e1e40;" 
+            onmouseover="this.style.backgroundColor='#f36523'; this.style.borderColor='#f36523';" 
+            onmouseout="this.style.backgroundColor='#0e1e40'; this.style.borderColor='#0e1e40';">
+            <strong>Save Changes</strong>
+          </button>     
         </div>
 
       </div>
