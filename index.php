@@ -1,10 +1,7 @@
 <?php
   session_start();
   include 'includes/conn.php'; // Ensure DB connection for login
-  if (isset($_SESSION['user'])) {
-    header('Location: dashboard.php'); // Redirect if already logged in
-    exit;
-  }
+  
  
 ?>
 <!DOCTYPE html>
