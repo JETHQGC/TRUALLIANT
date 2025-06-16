@@ -239,7 +239,12 @@ include 'includes/recruiter_names.php';
         </div>
 
         <div class="modal-footer border-top-0">
-          <button type="submit" class="btn btn-primary px-4">Save</button>
+            <button type="submit" class="btn btn-primary" 
+            style="background-color: #0e1e40; border-color: #0e1e40;" 
+            onmouseover="this.style.backgroundColor='#f36523'; this.style.borderColor='#f36523';" 
+            onmouseout="this.style.backgroundColor='#0e1e40'; this.style.borderColor='#0e1e40';">
+            <strong>Save</strong>
+          </button>     
         </div>
       </div>
     </form>

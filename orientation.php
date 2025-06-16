@@ -174,13 +174,18 @@ function getFixedColorClass($value, $map) {
   <span class="fw-semibold" style="color: #0e1e40;">Records</span>
   <div class="ms-auto d-flex gap-2">
     <!-- Send Orientation Schedule -->
-    <button id="sendScheduleBtn" class="btn btn-sm btn-success">
+  <button id="sendScheduleBtn" class="btn btn-sm"
+      style="background-color: #0e1e40; color: white; border-color: #0e1e40;"
+      onmouseover="this.style.backgroundColor='#0c1733';"
+      onmouseout="this.style.backgroundColor='#0e1e40';">
       <i class="fa fa-envelope-open-text me-1"></i>
       Send Orientation Schedule
     </button>
 
+
     <!-- Mark as Present (start disabled) -->
-    <button id="markPresentBtn" class="btn btn-sm btn-success" disabled>
+     <button id="markPresentBtn" class="btn btn-sm" disabled
+      style="background-color: #0e1e40; color: white; border-color: #0e1e40;">
       <i class="fa fa-check me-1"></i>
       Mark as Present
     </button>

@@ -33,7 +33,7 @@ include 'includes/recruiter_names.php';
   <ul class="nav nav-tabs mb-4" role="tablist">
     <li class="nav-item" role="presentation">
       <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button" role="tab"
-        style="color: #f36523; font-weight: 600; border-bottom: 3px solid #f36523; background-color: transparent;">
+        style="color: #0e1e40; font-weight: 600;  background-color: transparent;">
         Details
       </button>
     </li>
@@ -54,31 +54,14 @@ include 'includes/recruiter_names.php';
         color: #666;
       }
 
-      /* Active tab color switcher (using Bootstrap's data attributes) */
-      .nav-tabs .nav-link.active {
-        color: #f36523 !important;
-        border-bottom: 3px solid #f36523 !important;
-        background-color: transparent !important;
-      }
-
-      .nav-tabs .nav-link {
-        color: #0e1e40;
-        font-weight: 600;
-        border-bottom: 3px solid transparent;
-        transition: all 0.2s ease;
-      }
-
-      .nav-tabs .nav-link:hover {
-        border-color: #f36523;
-        color: #f36523;
-      }
+     
     </style>
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
   <div class="row gx-4">
     <!-- Source Info Panel -->
-    <div class="col-md-6 mb-4">
+   <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
          <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
       <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
