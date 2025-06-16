@@ -27,31 +27,52 @@ include 'includes/recruiter_names.php';
                   aria-label="Close"></button>
         </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body">
-          <!-- Tabs -->
-          <ul class="nav nav-tabs mb-4" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button" role="tab">
-                Details
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#interviewTab" type="button" role="tab">
-                Assessment
-              </button>
-            </li>
-          </ul>
+         <!-- Modal Body -->
+<div class="modal-body">
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button" role="tab"
+        style="color: #f36523; font-weight: 600; border-bottom: 3px solid #f36523; background-color: transparent;">
+        Details
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#interviewTab" type="button" role="tab"
+        style="color: #0e1e40; font-weight: 600; border-bottom: 3px solid transparent; background-color: transparent;">
+        Assessment
+      </button>
+    </li>
+  </ul>
 
-          <div class="tab-content">
-         <style>
-  /* Add this to your page (e.g. in your <head> or a linked stylesheet) */
-  #detailsTab dt::after {
-    content: ":";
-    margin-right: 0.25rem;
-    color: #666;
-  }
-</style>
+  <div class="tab-content">
+    <style>
+      /* Colon after dt */
+      #detailsTab dt::after {
+        content: ":";
+        margin-right: 0.25rem;
+        color: #666;
+      }
+
+      /* Active tab color switcher (using Bootstrap's data attributes) */
+      .nav-tabs .nav-link.active {
+        color: #f36523 !important;
+        border-bottom: 3px solid #f36523 !important;
+        background-color: transparent !important;
+      }
+
+      .nav-tabs .nav-link {
+        color: #0e1e40;
+        font-weight: 600;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .nav-tabs .nav-link:hover {
+        border-color: #f36523;
+        color: #f36523;
+      }
+    </style>
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
@@ -59,26 +80,28 @@ include 'includes/recruiter_names.php';
     <!-- Source Info Panel -->
     <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-light py-2">
-          <h6 class="mb-0">Source Info</h6>
-        </div>
+         <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
+        Source Information
+        <span style="color: #f36523;">●</span>
+      </h6>
+    </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted">ID</dt>
+            <dt class="col-sm-4 text-muted"><strong>ID</strong></dt>
             <dd class="col-sm-8">
               <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_id" name="source_id">
             </dd>
 
-                        <dt class="col-sm-4 text-muted">Source Date</dt>
+                        <dt class="col-sm-4 text-muted"><strong>Source Date</strong></dt>
             <dd class="col-sm-8">
               <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_date" name="source_date">
             </dd>
 
-            <dt class="col-sm-4 text-muted">Sourced By</dt>
+            <dt class="col-sm-4 text-muted"><strong>Sourced By</strong></dt>
             <dd class="col-sm-8">
               <input readonly type="text" class="form-control-plaintext" id="edit_source_by" name="source_by">
             </dd>
-
             
 
           </dl>
@@ -87,11 +110,14 @@ include 'includes/recruiter_names.php';
     </div>
 
     <!-- Personal Info Panel -->
-    <div class="col-md-6 mb-4">
+<div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-light py-2">
-          <h6 class="mb-0">Personal Info</h6>
-        </div>
+        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
+        Personal Information
+        <span style="color: #f36523;">●</span>
+      </h6>
+    </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">Name</dt>
@@ -156,66 +182,81 @@ include 'includes/recruiter_names.php';
            <!-- INTERVIEW TAB -->
 <!-- ASSESSMENT TAB -->
 <div class="tab-pane fade" id="interviewTab" role="tabpanel">
-  <h6 class="small text-secondary mb-3">Assessment</h6>
-  <div class="row gx-3">
+  <!-- Assessment Section Header -->
+  <div class="px-3 py-2 mb-3" style="background-color: #f0f2f7; border-radius: 6px;">
+    <h6 class="mb-0 fw-bold text-dark" style="color: #0e1e40;">Assessment</h6>
+  </div>
 
+  <div class="row gx-3 gy-2">
+
+    <style>
+      .form-horizontal-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .form-horizontal-row label {
+        flex: 0 0 120px;
+        margin-bottom: 0;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #0e1e40;
+      }
+      .form-horizontal-row input {
+        flex: 1;
+        font-size: 0.82rem;
+      }
+    </style>
     <!-- Comprehension -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Comprehension</label>
-      <input type="number" min="0" max="5" class="form-control score-field" id="edit_comprehension" name="comprehension" required>
+      <input type="number" min="0" max="5" class="form-control score-field" id="edit_comprehension" name="comprehension">
     </div>
-
     <!-- Pronunciation -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Pronunciation</label>
-      <input type="number" min="0" max="5" class="form-control score-field" id="edit_pronunciation" name="pronunciation" required>
+      <input type="number" min="0" max="5" class="form-control score-field" id="edit_pronunciation" name="pronunciation">
     </div>
-
     <!-- Active Listening -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Active Listening</label>
-      <input type="number" min="0" max="5" class="form-control score-field" id="edit_active_listening" name="active_listening" required>
+      <input type="number" min="0" max="5" class="form-control score-field" id="edit_active_listening" name="active_listening">
     </div>
-
     <!-- Diction -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Diction</label>
-      <input type="number" min="0" max="5" class="form-control score-field" id="edit_diction" name="diction" required>
+      <input type="number" min="0" max="5" class="form-control score-field" id="edit_diction" name="diction">
     </div>
-
     <!-- Intonation -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Intonation</label>
-      <input type="number" min="0" max="5" class="form-control score-field" id="edit_intonation" name="intonation" required>
+      <input type="number" min="0" max="5" class="form-control score-field" id="edit_intonation" name="intonation">
     </div>
-
     <!-- Typing Test -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Typing Test</label>
-      <input type="number" min="0" max="100" class="form-control" id="edit_typing_test" name="typing_test" required>
+      <input type="number" min="0" max="100" class="form-control" id="edit_typing_test" name="typing_test">
     </div>
-
     <!-- Script Reading -->
     <div class="col-md-6 mb-3">
       <label class="form-label">Script Reading</label>
-      <input type="number" min="0" max="5" class="form-control score-field" id="edit_script_reading" name="script_reading" required>
+      <input type="number" min="0" max="5" class="form-control score-field" id="edit_script_reading" name="script_reading">
     </div>
-
     <!-- Link -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Script Reading Link</label>
-      <input type="url" class="form-control" id="edit_link" name="link" required>
+      <label class="form-label">Link</label>
+      <input type="url" class="form-control" id="edit_link" name="link">
     </div>
-
     <!-- Total Score (read-only) -->
-    <div class="col-md-6 mb-3">
-      <label class="form-label">Total Score</label>
-      <input type="text" class="form-control fw-bold" name="total_score" id="total_score" readonly>
-    </div>
-
-  </div>
+    <!-- Total Score (read-only numeric) -->
+<div class="col-md-6 mb-3">
+  <label class="form-label">Total Score</label>
+<input type="text" class="form-control fw-bold" name="total_score" id="total_score" readonly>
 </div>
 
+ 
+  </div>
+</div>
 
 
           </div>
@@ -224,7 +265,12 @@ include 'includes/recruiter_names.php';
         <!-- Modal Footer -->
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="submit" class="btn btn-primary" 
+            style="background-color: #0e1e40; border-color: #0e1e40;" 
+            onmouseover="this.style.backgroundColor='#f36523'; this.style.borderColor='#f36523';" 
+            onmouseout="this.style.backgroundColor='#0e1e40'; this.style.borderColor='#0e1e40';">
+            <strong>Save Changes</strong>
+          </button>
         </div>
 
       </div>
