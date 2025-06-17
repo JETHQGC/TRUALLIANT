@@ -33,7 +33,7 @@
 
 
     <!-- Static Sidebar (desktop only) -->
- <div class="col-lg-2 d-none d-lg-block bg-light p-0 flex-shrink-0" style="height: 100vh;">
+ <div class="col-lg-2 d-none d-lg-block bg-light p-0 flex-shrink-0">
 
       <?php include 'includes/menubar.php'; ?>
     </div>
@@ -208,10 +208,13 @@ function getFixedColorClass($value, $map) {
   
 
     <!-- Mark as Present (start disabled) -->
-    <button id="training_btn" class="btn btn-sm btn-success">
-      <i class="fa fa-bell me-1"></i>
-      Send Training Schedule
-    </button>
+    <button id="endorse_btn" class="btn btn-sm"
+  style="background-color: #0e1e40; color: white; border-color: #0e1e40;"
+  onmouseover="this.style.backgroundColor='#0c1733';"
+  onmouseout="this.style.backgroundColor='#0e1e40';">
+  <i class="fa fa-check me-1"></i>
+  Send Training Schedule
+</button>
   </div>
 </div>
 
