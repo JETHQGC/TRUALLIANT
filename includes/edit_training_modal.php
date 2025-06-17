@@ -28,14 +28,17 @@
         <!-- Modal Body -->
         <div class="modal-body">
           <!-- Tabs -->
+     <!-- Tabs -->
           <ul class="nav nav-tabs mb-4" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button" role="tab">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button" role="tab"
+                style="color: #0e1e40; font-weight: 600;  background-color: transparent;">
                 Details
               </button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#interviewTab" type="button" role="tab">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#interviewTab" type="button" role="tab"
+                style="color: #0e1e40; font-weight: 600; border-bottom: 3px solid transparent; background-color: transparent;">
                 Training
               </button>
             </li>
@@ -49,17 +52,21 @@
     margin-right: 0.25rem;
     color: #666;
   }
+   
 </style>
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
   <div class="row gx-4">
     <!-- Source Info Panel -->
-    <div class="col-md-6 mb-4">
+<div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-light py-2">
-          <h6 class="mb-0">Endorsement Info</h6>
-        </div>
+        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
+        Endorsement Information
+        <span style="color: #f36523;">●</span>
+      </h6>
+    </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">ID</dt>
@@ -86,11 +93,14 @@
     </div>
 
     <!-- Personal Info Panel -->
-    <div class="col-md-6 mb-4">
+ <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-light py-2">
-          <h6 class="mb-0">Personal Info</h6>
-        </div>
+        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
+        Personal Information
+        <span style="color: #f36523;">●</span>
+      </h6>
+    </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">Name</dt>
@@ -263,7 +273,12 @@
         <!-- Modal Footer -->
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+           <button type="submit" class="btn btn-primary" 
+            style="background-color: #0e1e40; border-color: #0e1e40;" 
+            onmouseover="this.style.backgroundColor='#f36523'; this.style.borderColor='#f36523';" 
+            onmouseout="this.style.backgroundColor='#0e1e40'; this.style.borderColor='#0e1e40';">
+            <strong>Save Changes</strong>
+          </button>
         </div>
 
       </div>
