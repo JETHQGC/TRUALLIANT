@@ -12,8 +12,6 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
 
   if ($query->num_rows < 1) {
     $_SESSION['error'] = 'Cannot find account with that username';
-<<<<<<< Updated upstream
-=======
     header('Location: index.php');
     exit;
   }
@@ -39,7 +37,6 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
     }
     exit;
 
->>>>>>> Stashed changes
   } else {
     $row = $query->fetch_assoc();
     if (password_verify($password, $row['password'])) {
