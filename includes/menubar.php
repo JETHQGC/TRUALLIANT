@@ -6,7 +6,7 @@
   $isSourceUser = strpos($username, 'source') === 0;
   $isRecruitmentUser = strpos($username, 'recruiter') === 0;
   $isTrainerUser = strpos($username, 'trainer') === 0;
-
+$isAdminUser = strpos($username, 'admin') === 0;
   // Set dashboard file based on user role
   if ($isSourceUser) {
     $dashboardPage = 'dashboard_source.php';
@@ -14,7 +14,10 @@
     $dashboardPage = 'dashboard_recruiter.php';
   } elseif ($isTrainerUser) {
     $dashboardPage = 'dashboard_trainer.php';
-  } else {
+  } elseif ($isAdminUser) {
+    $dashboardPage = 'dashboard_admin.php';
+  } 
+  else {
     $dashboardPage = 'dashboard.php'; // fallback
   }
 
