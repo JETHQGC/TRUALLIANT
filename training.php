@@ -620,21 +620,69 @@ $('#scorecardForm').on('submit', function (e) {
 
     const totalScore = (finalMockCall + productKnowledge + dialerHowTo + language) * 100;
 
-    // Display result
-    $('#scoreSummary').html(`
-      <div class="alert alert-info text-start">
-        <div><strong>Partial Mock Call Score:</strong> ${partialMockCall.toFixed(2)}%</div>
-        <div><strong>Final Mock Call (40%):</strong> ${(finalMockCall * 100).toFixed(2)}%</div>
-        <div><strong>Product Knowledge (30%):</strong> ${(productKnowledge * 100).toFixed(2)}%</div>
-        <div><strong>Dialer How-To (20%):</strong> ${(dialerHowTo * 100).toFixed(2)}%</div>
-        <div><strong>Language 101 (10%):</strong> ${(language * 100).toFixed(2)}%</div>
-        <hr>
-        <div><strong class="fs-5">Total Score:</strong> ${totalScore.toFixed(2)}%</div>
+$('#scoreSummary').html(`
+  <div style="background-color: #e6f0ff; color: #0e1e40; padding: 24px; border-radius: 12px; font-family: 'Segoe UI', sans-serif; border: 1px solid #b3d1ff;">
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      
+      <!-- Item -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="font-weight: 600;">Partial Mock Call Score</div>
+        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+          ${partialMockCall.toFixed(2)}%
+        </div>
       </div>
-    `);
 
-    // 🔁 Change button to "Save" mode
-    btn.text('Save').removeClass('btn-primary').addClass('btn-success');
+      <!-- Item -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="font-weight: 600;">Final Mock Call <span style="opacity: 0.7;">(40%)</span></div>
+        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+          ${(finalMockCall * 100).toFixed(2)}%
+        </div>
+      </div>
+
+      <!-- Item -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="font-weight: 600;">Product Knowledge <span style="opacity: 0.7;">(30%)</span></div>
+        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+          ${(productKnowledge * 100).toFixed(2)}%
+        </div>
+      </div>
+
+      <!-- Item -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="font-weight: 600;">Dialer How-To <span style="opacity: 0.7;">(20%)</span></div>
+        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+          ${(dialerHowTo * 100).toFixed(2)}%
+        </div>
+      </div>
+
+      <!-- Item -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="font-weight: 600;">Language 101 <span style="opacity: 0.7;">(10%)</span></div>
+        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+          ${(language * 100).toFixed(2)}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr style="border-color: #b3d1ff; margin: 1.5rem 0;">
+
+    <!-- Total Score -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-size: 1.3rem; font-weight: bold; color: #f36523;">Total Score</div>
+      <div style="background-color: #f36523; color: #ffffff; padding: 8px 20px; border-radius: 6px; font-weight: bold; font-size: 1.3rem;">
+        ${totalScore.toFixed(2)}%
+      </div>
+    </div>
+  </div>
+`);
+
+
+
+
+// 🔁 Change button to "Save" mode
+btn.text('Save').removeClass('btn-primary').addClass('btn-success');
 
   } else {
     // 💾 SAVE to database using endorsement_id
