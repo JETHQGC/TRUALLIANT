@@ -276,14 +276,35 @@ function getFixedColorClass($value, $map) {
 
 
           <td>
-          <div class="d-flex gap-1">
-          <!-- Edit Button -->
-          <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;" data-id='<?= json_encode($row) ?>'>
-          <i class="fa fa-edit"></i>
-          </button>
+         <div class="d-flex gap-1">
+  <!-- Edit Button -->
+  <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;" 
+    data-id="<?= $row['endorsement_id'] ?>">
+    <i class="fa fa-edit"></i>
+  </button>
 
-          
-         </div>
+  <!-- Scorecard Button -->
+<?php
+  $isDisabled = (empty($row['batch']) || $row['batch'] === '0000-00-00 00:00:00');
+?>
+
+<span 
+  <?= $isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : '' ?>
+>
+  <button 
+    class="btn btn-sm scorecardBtn" 
+    style="background-color: #f36523; color: #ffffff;" 
+    data-id="<?= $row['endorsement_id'] ?>" 
+    data-name="<?= htmlspecialchars($row['name'], ENT_QUOTES) ?>"
+    <?= $isDisabled ? 'disabled' : '' ?>
+  >
+    <i class="fa fa-star"></i>
+  </button>
+</span>
+
+</div>
+
+
          </td>
 <td>
   <input
@@ -292,7 +313,7 @@ function getFixedColorClass($value, $map) {
     value="<?= $row['endorsement_id'] ?>"
     <?= (
       empty($row['batch']) ||
-      $row['batch'] === '0000-00-00' ||
+      $row['batch'] === '0000-00-00 00:00:00' ||
       $row['trainee_status'] !== ''
     ) ? 'disabled' : '' ?>
   >
@@ -333,7 +354,7 @@ function getFixedColorClass($value, $map) {
 <!-- Edit Modal -->
   <?php include 'includes/edit_training_modal.php'; ?>
    <?php include 'includes/send_training_schedule_modal.php'; ?>
-
+  <?php include 'includes/edit_scorecard_modal.php'; ?>
 
 
 
@@ -466,65 +487,246 @@ const table = $('#mergedTable').DataTable({
 
 let currentRow = null;
 
+$('#mergedTable').on('click', '.editBtn', function () {
+  currentRow = $(this).closest('tr');
+  const endorsementId = $(this).data('id');
 
-$('#mergedTable').on('click', '.editBtn', function () { 
-   currentRow = $(this).closest('tr'); // 🔧 Store the current table row
-  const data = $(this).data('id'); // JSON-parsed row data
-
-
-
-
-
-
-$('#editModalTitle').text(data.name || 'Edit Record');
-
-  // Source Info
-  $('#edit_source_id').val(data.source_id);
-  $('#edit_date_endorsed').val(data.date_endorsed);
-   $('#edit_endorsement_id').val(data.endorsement_id);
-  
- 
-
-  // Personal Info
-  $('#edit_name').val(data.name);
-  $('#edit_phone').val(data.phone);
-  $('#edit_age').val(data.age);
-  $('#edit_birthdate').val(data.birthdate);
-  $('#edit_email').val(data.email);
-  $('#edit_address').val(data.address);
-  $('#edit_city_municipality').val(data.city_municipality);
-  $('#edit_educational_attainment').val(data.educational_attainment);
-  $('#edit_name_of_school').val(data.name_of_school);
-  $('#edit_year_last_attended').val(data.year_last_attended);
-
-// Training Info
-  $('#edit_batch').val(data.batch || '');
-  $('#edit_trainer').val(data.trainer || '');
-  $('#edit_attendance').val(data.day1_attendance || '');
-  $('#edit_credential').val(data.ta_credential || '');
-  $('#edit_trainee_status').val(data.trainee_status || '');
-  $('#edit_status_date').val(data.status_date || '');
-  $('#edit_remarks').val(data.status_remarks || '');
-
-
-
-
- 
-
-
-
-  // Show modal
+  // Show loading while fetching
+  $('#editModalTitle').text('Loading...');
   $('#editModal').modal('show');
+  $('#editForm input, #editForm select, #editForm textarea').prop('disabled', true);
 
+  $.ajax({
+    url: 'get_training_single_record.php',
+    method: 'GET',
+    data: { id: endorsementId },
+    dataType: 'json',
+    success: function (data) {
+      $('#editModalTitle').text(data.name || 'Edit Record');
 
+      // Source Info
+      $('#edit_source_id').val(data.source_id);
+      $('#edit_date_endorsed').val(data.date_endorsed);
+      $('#edit_endorsement_id').val(data.endorsement_id);
 
-  
+      // Personal Info
+      $('#edit_name').val(data.name);
+      $('#edit_phone').val(data.phone);
+      $('#edit_age').val(data.age);
+      $('#edit_birthdate').val(data.birthdate);
+      $('#edit_email').val(data.email);
+      $('#edit_address').val(data.address);
+      $('#edit_city_municipality').val(data.city_municipality);
+      $('#edit_educational_attainment').val(data.educational_attainment);
+      $('#edit_name_of_school').val(data.name_of_school);
+      $('#edit_year_last_attended').val(data.year_last_attended);
 
+      // Training Info
+      $('#edit_batch').val(data.batch || '');
+      $('#edit_trainer').val(data.trainer || '');
+      $('#edit_attendance').val(data.day1_attendance || '');
+      $('#edit_credential').val(data.ta_credential || '');
+      $('#edit_trainee_status').val(data.trainee_status || '');
+      $('#edit_status_date').val(data.status_date || '');
+      $('#edit_remarks').val(data.status_remarks || '');
 
-
-
-
+      $('#editForm input, #editForm select, #editForm textarea').prop('disabled', false);
+    },
+    error: function () {
+      $('#editModalTitle').text('Error loading data');
+      $('#editForm input, #editForm select, #editForm textarea').prop('disabled', false);
+      $('#alertContainer').html(`
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fa fa-warning me-2"></i><strong>Error:</strong> Unable to fetch record.
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `);
+    }
+  });
 });
+
+
+
+
+let currentEndorsementId = null;
+$('#mergedTable').on('click', '.scorecardBtn', function () {
+   currentRow = $(this).closest('tr');
+  currentEndorsementId = $(this).data('id');
+  const traineeName = $(this).data('name');
+
+  $('#scorecardModalLabel').text(`Scorecard: ${traineeName}`);
+  $('#scorecardForm')[0].reset();
+  $('#scoreSummary').empty();
+  $('#scorecardActionBtn').text('Calculate').removeClass('btn-success').addClass('btn-primary');
+  $('#scorecardModal').modal('show');
+
+  // 🔁 Autofill via AJAX
+  $.ajax({
+    url: 'get_scorecard.php',
+    method: 'GET',
+    data: { id: currentEndorsementId },
+    dataType: 'json',
+    success: function (data) {
+      if (!data) return;
+
+      $('[name=call_control]').val(data.call_control || '');
+      $('[name=rebuttals]').val(data.rebuttals || '');
+      $('[name=script_adherence]').val(data.script_adherence || '');
+      $('[name=professionalism]').val(data.professionalism || '');
+      $('[name=closing]').val(data.closing || '');
+      $('[name=product_knowledge]').val(data.product_knowledge || '');
+      $('[name=dialer_howto]').val(data.dialer_how_to || '');
+      $('[name=language]').val(data.language_101 || '');
+    }
+  });
+});
+
+
+ 
+$('#scorecardForm').on('submit', function (e) {
+  e.preventDefault();
+
+  const btn = $('#scorecardActionBtn');
+  const v = name => parseFloat($(`[name=${name}]`).val()) || 0;
+
+  if (btn.text() === 'Calculate') {
+    // 🔢 Do calculations
+    const callControl     = v('call_control');
+    const rebuttals       = v('rebuttals');
+    const scriptAdherence = v('script_adherence');
+    const professionalism = v('professionalism');
+    const closing         = v('closing');
+
+    const mockCallWeights = {
+      callControl: 0.40,
+      rebuttals: 0.25,
+      scriptAdherence: 0.20,
+      professionalism: 0.10,
+      closing: 0.05
+    };
+
+    const partialMockCall = (
+      (callControl / 10) * mockCallWeights.callControl +
+      (rebuttals / 10) * mockCallWeights.rebuttals +
+      (scriptAdherence / 10) * mockCallWeights.scriptAdherence +
+      (professionalism / 10) * mockCallWeights.professionalism +
+      (closing / 10) * mockCallWeights.closing
+    ) * 100;
+
+    const finalMockCall = partialMockCall * 0.40 / 100;
+    const productKnowledge = (v('product_knowledge') / 10) * 0.30;
+    const dialerHowTo      = (v('dialer_howto') / 10) * 0.20;
+    const language         = (v('language') / 10) * 0.10;
+
+    const totalScore = (finalMockCall + productKnowledge + dialerHowTo + language) * 100;
+
+    // Display result
+    $('#scoreSummary').html(`
+      <div class="alert alert-info text-start">
+        <div><strong>Partial Mock Call Score:</strong> ${partialMockCall.toFixed(2)}%</div>
+        <div><strong>Final Mock Call (40%):</strong> ${(finalMockCall * 100).toFixed(2)}%</div>
+        <div><strong>Product Knowledge (30%):</strong> ${(productKnowledge * 100).toFixed(2)}%</div>
+        <div><strong>Dialer How-To (20%):</strong> ${(dialerHowTo * 100).toFixed(2)}%</div>
+        <div><strong>Language 101 (10%):</strong> ${(language * 100).toFixed(2)}%</div>
+        <hr>
+        <div><strong class="fs-5">Total Score:</strong> ${totalScore.toFixed(2)}%</div>
+      </div>
+    `);
+
+    // 🔁 Change button to "Save" mode
+    btn.text('Save').removeClass('btn-primary').addClass('btn-success');
+
+  } else {
+    // 💾 SAVE to database using endorsement_id
+    const postData = {
+      endorsement_id: currentEndorsementId,
+      call_control: v('call_control'),
+      rebuttals: v('rebuttals'),
+      script_adherence: v('script_adherence'),
+      professionalism: v('professionalism'),
+      closing: v('closing'),
+      product_knowledge: v('product_knowledge'),
+      dialer_how_to: v('dialer_howto'),
+      language: v('language')
+    };
+
+    $('#scorecardActionBtn').prop('disabled', true).text('Saving...');
+
+    $.post('save_scorecard.php', postData, function (response) {
+      if (response.status === 'success') {
+        $('#scoreSummary').append(`<div class="alert alert-success mt-3">Score saved successfully!</div>`);
+           $.ajax({
+      url: 'get_training_single_record.php',
+      type: 'GET',
+      data: { id: currentEndorsementId },
+      dataType: 'json',
+      success: function (data) {
+        const table = $('#mergedTable').DataTable();
+       const canCheck = (
+  data.batch &&
+  data.trainee_status === '' &&
+  data.batch !== '0000-00-00 00:00:00'
+);
+
+   const checkboxCell = `
+    <input
+      type="checkbox"
+      class="row-checkbox"
+      value="${data.endorsement_id}"
+      ${canCheck ? '' : 'disabled'}
+    >
+  `;
+
+   const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
+   
+       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00';
+const scorecardBtn = `
+  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : ''}>
+    <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
+      data-id="${data.endorsement_id}" 
+      data-name="${data.name.replace(/"/g, '&quot;')}"
+      ${isDisabled ? 'disabled' : ''}>
+      <i class="fa fa-star"></i>
+    </button>
+  </span>
+`;
+        table.row(currentRow).data([
+          data.source_id,
+          data.date_endorsed,
+          data.name,
+          data.batch,
+          data.ta_credential,
+          data.trainer,
+          data.day1_attendance === 'Yes'
+  ? '<span class="badge bg-success">Yes</span>'
+  : data.day1_attendance === 'No'
+    ? '<span class="badge bg-danger">No</span>'
+    : '',
+         statusBadge,
+          data.status_date,
+          data.status_remarks,
+          `<div class="d-flex gap-1">
+             <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
+              data-id="${data.endorsement_id}">
+              <i class="fa fa-edit"></i>
+            </button>
+            ${scorecardBtn}
+           </div>`,
+            checkboxCell,
+        ]).draw(false);
+      }
+    });
+
+
+    $('#scorecardModal').modal('hide');
+      } else {
+        $('#scoreSummary').append(`<div class="alert alert-danger mt-3">${response.message}</div>`);
+      }
+      $('#scorecardActionBtn').prop('disabled', false).text('Save');
+    }, 'json');
+  }
+});
+
 
 
 
@@ -569,7 +771,7 @@ $('#editForm').on('submit', function (e) {
        const canCheck = (
   data.batch &&
   data.trainee_status === '' &&
-  data.batch !== '0000-00-00'
+  data.batch !== '0000-00-00 00:00:00'
 );
 
    const checkboxCell = `
@@ -582,6 +784,18 @@ $('#editForm').on('submit', function (e) {
   `;
 
    const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
+   
+       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00';
+const scorecardBtn = `
+  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : ''}>
+    <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
+      data-id="${data.endorsement_id}" 
+      data-name="${data.name.replace(/"/g, '&quot;')}"
+      ${isDisabled ? 'disabled' : ''}>
+      <i class="fa fa-star"></i>
+    </button>
+  </span>
+`;
         table.row(currentRow).data([
           data.source_id,
           data.date_endorsed,
@@ -599,9 +813,10 @@ $('#editForm').on('submit', function (e) {
           data.status_remarks,
           `<div class="d-flex gap-1">
              <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-                     data-id='${JSON.stringify(data)}'>
-               <i class="fa fa-edit"></i>
-             </button>
+              data-id="${data.endorsement_id}">
+              <i class="fa fa-edit"></i>
+            </button>
+            ${scorecardBtn}
            </div>`,
             checkboxCell,
         ]).draw(false);
@@ -663,7 +878,7 @@ $(function() {
 
 
 // when user clicks “Send Orientation Schedule”
-$('#training_btn').on('click', () => { 
+$('#endorse_btn').on('click', () => { 
   // gather all enabled, checked boxes
   const checked = $('.row-checkbox:checked:not(:disabled)');
   if (!checked.length) {
@@ -733,7 +948,7 @@ $('#confirmSendBtn').on('click', () => {
         const canCheck = (
   data.batch &&
   data.trainee_status === '' &&
-  data.batch !== '0000-00-00'
+  data.batch !== '0000-00-00 00:00:00'
 );
         const checkboxCell = `
     <input
@@ -745,7 +960,18 @@ $('#confirmSendBtn').on('click', () => {
   `;
 
   const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
-       
+       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00';
+const scorecardBtn = `
+  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : ''}>
+    <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
+      data-id="${data.endorsement_id}" 
+      data-name="${data.name.replace(/"/g, '&quot;')}"
+      ${isDisabled ? 'disabled' : ''}>
+      <i class="fa fa-star"></i>
+    </button>
+  </span>
+`;
+
 
         row.data([
          data.source_id,
@@ -763,11 +989,12 @@ $('#confirmSendBtn').on('click', () => {
           data.status_date,
           data.status_remarks,
           `<div class="d-flex gap-1">
-             <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-                     data-id='${JSON.stringify(data)}'>
-               <i class="fa fa-edit"></i>
-             </button>
-           </div>`,
+  <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
+    data-id="${data.endorsement_id}">
+    <i class="fa fa-edit"></i>
+  </button>
+   ${scorecardBtn}
+</div>`,
             checkboxCell
         ]).draw(false);
       });
@@ -793,18 +1020,6 @@ $('#confirmSendBtn').on('click', () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   });
 
 
@@ -814,6 +1029,8 @@ window.addEventListener("pageshow", function (event) {
       window.location.reload();
     }
   });
+
+
 
 
 
