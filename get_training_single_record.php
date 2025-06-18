@@ -14,7 +14,7 @@ $sql = " SELECT
   LEFT JOIN endorsement e ON s.source_id = e.source_id
   LEFT JOIN initial_interview i ON s.source_id = i.source_id
   LEFT JOIN training t ON e.endorsement_id = t.endorsement_id
-        WHERE t.endorsement_id = ?";
+        WHERE e.endorsement_id = ?";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);

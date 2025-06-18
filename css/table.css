@@ -116,3 +116,13 @@ table.dataTable thead .sorting_desc:after {
 #mergedTable .btn:hover {
   transform: translateY(-1px);
 }
+
+
+
+
+
+button.scorecardBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
