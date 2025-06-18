@@ -192,48 +192,48 @@ include 'includes/recruiter_names.php';
     </style>
     <!-- Comprehension -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Comprehension</label>
+      <label class="form-label"><strong>Comprehension</strong></label>
       <input type="number" min="0" max="5" class="form-control score-field" id="edit_comprehension" name="comprehension">
     </div>
     <!-- Pronunciation -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Pronunciation</label>
+      <label class="form-label"><strong>Pronunciation</strong></label>
       <input type="number" min="0" max="5" class="form-control score-field" id="edit_pronunciation" name="pronunciation">
     </div>
     <!-- Active Listening -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Active Listening</label>
+      <label class="form-label"><strong>Active Listening</strong></label>
       <input type="number" min="0" max="5" class="form-control score-field" id="edit_active_listening" name="active_listening">
     </div>
     <!-- Diction -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Diction</label>
+      <label class="form-label"><strong>Diction</strong></label>
       <input type="number" min="0" max="5" class="form-control score-field" id="edit_diction" name="diction">
     </div>
     <!-- Intonation -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Intonation</label>
+      <label class="form-label"><strong>Intonation</strong></label>
       <input type="number" min="0" max="5" class="form-control score-field" id="edit_intonation" name="intonation">
     </div>
     <!-- Typing Test -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Typing Test</label>
+      <label class="form-label"><strong>Typing Test</strong></label>
       <input type="number" min="0" max="100" class="form-control" id="edit_typing_test" name="typing_test">
     </div>
     <!-- Script Reading -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Script Reading</label>
+      <label class="form-label"><strong>Script Reading</strong></label>
       <input type="number" min="0" max="5" class="form-control score-field" id="edit_script_reading" name="script_reading">
     </div>
     <!-- Link -->
     <div class="col-md-6 mb-3">
-      <label class="form-label">Link</label>
+      <label class="form-label"><strong>Link</strong></label>
       <input type="url" class="form-control" id="edit_link" name="link">
     </div>
     <!-- Total Score (read-only) -->
     <!-- Total Score (read-only numeric) -->
 <div class="col-md-6 mb-3">
-  <label class="form-label">Total Score</label>
+  <label class="form-label"><strong>Total Score</strong></label>
 <input type="text" class="form-control fw-bold" name="total_score" id="total_score" readonly>
 </div>
 
