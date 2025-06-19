@@ -58,104 +58,88 @@
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
   <div class="row gx-4">
-    <!-- Source Info Panel -->
-<div class="col-md-6 mb-4">
-      <div class="card border-0 shadow-sm h-100">
+
+    <!-- Endorsement Information -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm border-0 h-100">
         <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Endorsement Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
+          <h6 class="mb-0 text-white fw-semibold">
+            Endorsement Information <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
         <div class="card-body">
-          <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted">ID</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_id" name="source_id">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Endorsement ID</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_endorsement_id" name="endorsement_id">
-            </dd>
-
-                        <dt class="col-sm-4 text-muted">Endorsement Date</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_date_endorsed" name="date_endorsed">
-            </dd>
-            
-
-            
-
-          </dl>
+          <div class="mb-3">
+            <label class="form-label text-muted">ID</label>
+            <input readonly type="text" class="form-control fw-bold" id="edit_source_id" name="source_id">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted">Endorsement ID</label>
+            <input readonly type="text" class="form-control fw-bold" id="edit_endorsement_id" name="endorsement_id">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted">Endorsement Date</label>
+            <input readonly type="text" class="form-control fw-bold" id="edit_date_endorsed" name="date_endorsed">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Personal Info Panel -->
- <div class="col-md-6 mb-4">
-      <div class="card border-0 shadow-sm h-100">
+    <!-- Personal Information -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm border-0 h-100">
         <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Personal Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
+          <h6 class="mb-0 text-white fw-semibold">
+            Personal Information <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
         <div class="card-body">
-          <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted">Name</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_name" name="name">
-            </dd>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Name</label>
+            <input readonly type="text" class="form-control fw-bold" id="edit_name" name="name" style="font-size: 0.81rem;">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Phone</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_phone" name="phone">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Age</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_age" name="age">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Birthdate</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_birthdate" name="birthdate">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Email</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_email" name="email">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Address</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_address" name="address">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">City / Municipality</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_city_municipality" name="city_municipality">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Education</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_educational_attainment" name="educational_attainment">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">School</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_name_of_school" name="name_of_school">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Year Last Attended</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_year_last_attended" name="year_last_attended">
-            </dd>
-          </dl>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Phone</label>
+              <input readonly type="text" class="form-control" id="edit_phone" name="phone">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Age</label>
+              <input readonly type="text" class="form-control" id="edit_age" name="age">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Birthdate</label>
+              <input readonly type="text" class="form-control" id="edit_birthdate" name="birthdate">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Email</label>
+              <input readonly type="text" class="form-control" id="edit_email" name="email"  style="font-size: 0.81rem;">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Address</label>
+              <input readonly type="text" class="form-control" id="edit_address" name="address">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">City / Municipality</label>
+              <input readonly type="text" class="form-control" id="edit_city_municipality" name="city_municipality">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Education</label>
+              <input readonly type="text" class="form-control" id="edit_educational_attainment" name="educational_attainment">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">School</label>
+              <input readonly type="text" class="form-control" id="edit_name_of_school" name="name_of_school">
+            </div>
+            <div class="col-md-6 mb-0">
+              <label class="form-label text-muted">Year Last Attended</label>
+              <input readonly type="text" class="form-control" id="edit_year_last_attended" name="year_last_attended">
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 

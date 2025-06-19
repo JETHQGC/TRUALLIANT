@@ -209,9 +209,9 @@ function getFixedColorClass($value, $map) {
 
     <!-- Mark as Present (start disabled) -->
     <button id="endorse_btn" class="btn btn-sm"
-  style="background-color: #0e1e40; color: white; border-color: #0e1e40;"
-  onmouseover="this.style.backgroundColor='#0c1733';"
-  onmouseout="this.style.backgroundColor='#0e1e40';">
+  style="background-color: #f36523; color: white; border-color: #ffffff;"
+  onmouseover="this.style.backgroundColor='#0e1e40';"
+  onmouseout="this.style.backgroundColor='#f36523';">
   <i class="fa fa-check me-1"></i>
   Send Training Schedule
 </button>
@@ -696,46 +696,71 @@ $('#scorecardForm').on('submit', function (e) {
     const totalScore = (finalMockCall + productKnowledge + dialerHowTo + language) * 100;
 
 $('#scoreSummary').html(`
-  <div style="background-color: #e6f0ff; color: #0e1e40; padding: 24px; border-radius: 12px; font-family: 'Segoe UI', sans-serif; border: 1px solid #b3d1ff;">
-    <div style="display: flex; flex-direction: column; gap: 14px;">
-      
-      <!-- Item -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="font-weight: 600;">Partial Mock Call Score</div>
-        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-          ${partialMockCall.toFixed(2)}%
+  <div style="background-color: #e6f0ff; color: #0e1e40; padding: 24px; border-radius: 12px; font-family: 'Poppins', sans-serif; border: 1px solid #b3d1ff;">
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+
+      <!-- Partial Mock Call -->
+      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 600;">Partial Mock Call Score</div>
+          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+            ${partialMockCall.toFixed(2)}%
+          </div>
+        </div>
+        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
+          <div style="width: ${partialMockCall}%; height: 100%; background-color: #f36523;"></div>
         </div>
       </div>
 
-      <!-- Item -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="font-weight: 600;">Final Mock Call <span style="opacity: 0.7;">(40%)</span></div>
-        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-          ${(finalMockCall * 100).toFixed(2)}%
+      <!-- Final Mock Call -->
+      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 600;">Final Mock Call <span style="opacity: 0.7;">(40%)</span></div>
+          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+            ${(finalMockCall * 100).toFixed(2)}%
+          </div>
+        </div>
+        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
+          <div style="width: ${(finalMockCall * 100)}%; height: 100%; background-color: #f36523;"></div>
         </div>
       </div>
 
-      <!-- Item -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="font-weight: 600;">Product Knowledge <span style="opacity: 0.7;">(30%)</span></div>
-        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-          ${(productKnowledge * 100).toFixed(2)}%
+      <!-- Product Knowledge -->
+      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 600;">Product Knowledge <span style="opacity: 0.7;">(30%)</span></div>
+          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+            ${(productKnowledge * 100).toFixed(2)}%
+          </div>
+        </div>
+        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
+          <div style="width: ${(productKnowledge * 100)}%; height: 100%; background-color: #f36523;"></div>
         </div>
       </div>
 
-      <!-- Item -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="font-weight: 600;">Dialer How-To <span style="opacity: 0.7;">(20%)</span></div>
-        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-          ${(dialerHowTo * 100).toFixed(2)}%
+      <!-- Dialer How-To -->
+      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 600;">Dialer How-To <span style="opacity: 0.7;">(20%)</span></div>
+          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+            ${(dialerHowTo * 100).toFixed(2)}%
+          </div>
+        </div>
+        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
+          <div style="width: ${(dialerHowTo * 100)}%; height: 100%; background-color: #f36523;"></div>
         </div>
       </div>
 
-      <!-- Item -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="font-weight: 600;">Language 101 <span style="opacity: 0.7;">(10%)</span></div>
-        <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-          ${(language * 100).toFixed(2)}%
+      <!-- Language 101 -->
+      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 600;">Language 101 <span style="opacity: 0.7;">(10%)</span></div>
+          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
+            ${(language * 100).toFixed(2)}%
+          </div>
+        </div>
+        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
+          <div style="width: ${(language * 100)}%; height: 100%; background-color: #f36523;"></div>
         </div>
       </div>
     </div>
@@ -752,8 +777,6 @@ $('#scoreSummary').html(`
     </div>
   </div>
 `);
-
-
 
 
 // 🔁 Change button to "Save" mode
