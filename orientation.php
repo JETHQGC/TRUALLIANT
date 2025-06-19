@@ -175,9 +175,9 @@ function getFixedColorClass($value, $map) {
   <div class="ms-auto d-flex gap-2">
     <!-- Send Orientation Schedule -->
   <button id="sendScheduleBtn" class="btn btn-sm"
-      style="background-color: #0e1e40; color: white; border-color: #0e1e40;"
-      onmouseover="this.style.backgroundColor='#0c1733';"
-      onmouseout="this.style.backgroundColor='#0e1e40';">
+      style="background-color: #f36523; color: white; border-color: #ffffff;"
+      onmouseover="this.style.backgroundColor='#0e1e40';"
+      onmouseout="this.style.backgroundColor='#f36523';">
       <i class="fa fa-envelope-open-text me-1"></i>
       Send Orientation Schedule
     </button>
@@ -185,7 +185,7 @@ function getFixedColorClass($value, $map) {
 
     <!-- Mark as Present (start disabled) -->
      <button id="markPresentBtn" class="btn btn-sm" disabled
-      style="background-color: #0e1e40; color: white; border-color: #0e1e40;">
+      style="background-color: #f36523; color: white; border-color: #ffffff;">
       <i class="fa fa-check me-1"></i>
       Mark as Present
     </button>

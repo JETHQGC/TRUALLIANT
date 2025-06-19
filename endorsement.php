@@ -182,9 +182,9 @@ function getFixedColorClass($value, $map) {
 
     <!-- Mark as Present (start disabled) -->
 <button id="endorse_btn" class="btn btn-sm"
-  style="background-color: #0e1e40; color: white; border-color: #0e1e40;"
-  onmouseover="this.style.backgroundColor='#0c1733';"
-  onmouseout="this.style.backgroundColor='#0e1e40';">
+  style="background-color: #f36523; color: white; border-color: #ffffff;"
+  onmouseover="this.style.backgroundColor='#0e1e40';"
+  onmouseout="this.style.backgroundColor='#f36523';">
   <i class="fa fa-check me-1"></i>
   Endorse to Training
 </button>
