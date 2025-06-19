@@ -1,4 +1,11 @@
-
+<?php
+include 'includes/conn.php';
+  $recruiters = [];
+  $tr = $conn->query("SELECT username, name FROM user WHERE username LIKE 'trainer%' ORDER BY name");
+  while ($t = $tr->fetch_assoc()) {
+      $trainers[] = $t;
+  }
+?>
 
 <!-- Edit / Interview Modal -->
 <div class="modal fade"
@@ -172,8 +179,19 @@
 
     <div class="col-md-6 mb-3">
       <label class="form-label">Facilitator</label>
-      <input type="text" class="form-control" id="edit_facilitator" name="facilitator">
+      <select class="form-control" id="edit_facilitator" name="facilitator">
+    <option value="">-- Select Trainer --</option>
+    <?php foreach ($trainers as $tra): ?>
+      <option value="<?= htmlspecialchars($tra['name']) ?>">
+        <?= htmlspecialchars($tra['name']) ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
 </div>
+
+
+
+
     <div class="col-md-6 mb-3">
       <label class="form-label">Confirmation</label>
       <select class="form-select" id="edit_confirmation" name="confirmation">

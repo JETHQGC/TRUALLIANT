@@ -36,6 +36,7 @@ $dialerHowTo      = score_weight($data['dialer_how_to'], 0.20);
 $language         = score_weight($data['language'], 0.10);
 
 $totalScore = $finalMockCall + $productKnowledge + $dialerHowTo + $language;
+$percentageScore = $totalScore * 100;
 
 // Step 3: Check if scorecard already exists
 $check_stmt = $conn->prepare("SELECT scorecard_id FROM scorecard WHERE training_id = ?");
@@ -43,8 +44,8 @@ $check_stmt->bind_param("i", $training_id);
 $check_stmt->execute();
 $existing = $check_stmt->get_result()->fetch_assoc();
 
+// Step 4: Insert or Update scorecard
 if ($existing) {
-  // Scorecard exists — perform update
   $sql = "UPDATE scorecard SET 
     call_control = ?, rebuttals = ?, script_adherence = ?, professionalism = ?, closing = ?,
     product_knowledge = ?, dialer_how_to = ?, language_101 = ?
@@ -63,7 +64,6 @@ if ($existing) {
     $training_id
   );
 } else {
-  // Scorecard does not exist — perform insert
   $sql = "INSERT INTO scorecard (
     training_id, call_control, rebuttals, script_adherence, professionalism, closing,
     product_knowledge, dialer_how_to, language_101
@@ -83,17 +83,26 @@ if ($existing) {
   );
 }
 
-// Step 4: Execute insert/update
+// Step 5: Execute insert/update, then update trainee status
 if ($stmt->execute()) {
-  // Step 5: Update status if total score < 85
-  if ($totalScore * 100 < 85) {
-    $update = $conn->prepare("UPDATE training SET trainee_status = ? WHERE training_id = ?");
-    $status = "Terminated - Trainee Poor Performance";
-    $update->bind_param("si", $status, $training_id);
-    $update->execute();
-  }
+  // Determine status based on score
+  $status = ($percentageScore < 85)
+    ? "Terminated - Trainee Poor Performance"
+    : "Passed";
 
-  echo json_encode(['status' => 'success', 'message' => $existing ? 'Score updated' : 'Score saved']);
+  // Update trainee_status
+  $update = $conn->prepare("UPDATE training SET trainee_status = ? WHERE training_id = ?");
+  $update->bind_param("si", $status, $training_id);
+  $update->execute();
+
+  echo json_encode([
+    'status' => 'success',
+    'message' => $existing ? 'Score updated' : 'Score saved'
+  ]);
 } else {
-  echo json_encode(['status' => 'error', 'message' => 'Save failed']);
+  echo json_encode([
+    'status' => 'error',
+    'message' => 'Save failed'
+  ]);
 }
+?>

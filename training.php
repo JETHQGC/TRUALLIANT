@@ -88,8 +88,8 @@ $sql = "
     p.name, p.phone, p.age, p.birthdate, p.email, p.address,
     p.city_municipality, p.educational_attainment, p.name_of_school, p.year_last_attended,
     i.bpo_exp,
-    e.date_endorsed, e.endorsement_id,
-    t.batch, t.trainer, t.day1_attendance, t.ta_credential, t.trainee_status, t.status_date, t.status_remarks
+    e.date_endorsed, e.endorsement_id, e.facilitator,
+    t.batch, t.day1_attendance, t.ta_credential, t.trainee_status, t.status_date, t.status_remarks
   FROM source s
   LEFT JOIN personal_info p ON s.source_id = p.source_id
   LEFT JOIN endorsement e ON s.source_id = e.source_id
@@ -167,8 +167,8 @@ $statusColorMap = [
   'Konnect Leads - Nesting' => 'badge-color-29',
 
   // Premium Programs
-  'Deployment Pool - Premium' => 'badge-color-30',
-  'Premium - Synergy' => 'badge-color-31',
+  'Endorsed to Deployment' => 'badge-color-30',
+  'Passed' => 'badge-color-31',
   'Premium - Zinnia Health Intake' => 'badge-color-32',
   'Premium - Ramzey CS' => 'badge-color-33',
   'Premium - Simpson' => 'badge-color-34',
@@ -254,7 +254,7 @@ function getFixedColorClass($value, $map) {
           <td><?= $row['name'] ?></td>
           <td><?= $row['batch'] ?></td>
           <td><?= $row['ta_credential'] ?></td>
-          <td><?= $row['trainer'] ?></td>
+          <td><?= $row['facilitator'] ?></td>
           <td>
             <?php if ($row['day1_attendance'] === 'Yes'): ?>
               <span class="badge bg-success">Yes</span>
@@ -279,17 +279,19 @@ function getFixedColorClass($value, $map) {
          <div class="d-flex gap-1">
   <!-- Edit Button -->
   <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;" 
-    data-id="<?= $row['endorsement_id'] ?>">
+    data-id="<?= $row['endorsement_id'] ?>"
+     data-facilitator="<?= htmlspecialchars($row['facilitator'], ENT_QUOTES) ?>">
+    
     <i class="fa fa-edit"></i>
   </button>
 
   <!-- Scorecard Button -->
 <?php
-  $isDisabled = (empty($row['batch']) || $row['batch'] === '0000-00-00 00:00:00');
+  $isDisabled = (empty($row['batch']) || $row['batch'] === '0000-00-00 00:00:00' || empty($row['trainee_status']));
 ?>
 
 <span 
-  <?= $isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : '' ?>
+  <?= $isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send  training schedule to enable scorecard"' : '' ?>
 >
   <button 
     class="btn btn-sm scorecardBtn" 
@@ -314,7 +316,8 @@ function getFixedColorClass($value, $map) {
     <?= (
       empty($row['batch']) ||
       $row['batch'] === '0000-00-00 00:00:00' ||
-      $row['trainee_status'] !== ''
+      $row['trainee_status'] !== '' ||
+      $row['facilitator'] !== $user['name']
     ) ? 'disabled' : '' ?>
   >
 </td>
@@ -368,7 +371,7 @@ function getFixedColorClass($value, $map) {
 
 
 <script>
-   
+   const currentTrainer = <?= json_encode($user['name']); ?>;
 
 
 const sourceColorMap = {
@@ -413,8 +416,8 @@ const statusColorMap = {
   "Konnect Leads - Nesting": "badge-color-29",
 
   // Premium Programs
-  "Deployment Pool - Premium": "badge-color-30",
-  "Premium - Synergy": "badge-color-31",
+  "Endorsed to Deployment": "badge-color-30",
+  "Passed": "badge-color-31",
   "Premium - Zinnia Health Intake": "badge-color-32",
   "Premium - Ramzey CS": "badge-color-33",
   "Premium - Simpson": "badge-color-34",
@@ -490,6 +493,19 @@ let currentRow = null;
 $('#mergedTable').on('click', '.editBtn', function () {
   currentRow = $(this).closest('tr');
   const endorsementId = $(this).data('id');
+  const facilitator = $(this).data('facilitator');
+
+
+  if (facilitator !== currentTrainer) {
+  $('#alertContainer').html(`
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fa fa-exclamation-triangle me-2"></i>
+      You’re not the assigned Trainer for this record.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `);
+  return;
+}
 
   // Show loading while fetching
   $('#editModalTitle').text('Loading...');
@@ -523,14 +539,42 @@ $('#mergedTable').on('click', '.editBtn', function () {
 
       // Training Info
       $('#edit_batch').val(data.batch || '');
-      $('#edit_trainer').val(data.trainer || '');
       $('#edit_attendance').val(data.day1_attendance || '');
       $('#edit_credential').val(data.ta_credential || '');
       $('#edit_trainee_status').val(data.trainee_status || '');
       $('#edit_status_date').val(data.status_date || '');
       $('#edit_remarks').val(data.status_remarks || '');
 
+    
+
       $('#editForm input, #editForm select, #editForm textarea').prop('disabled', false);
+
+if (data.trainee_status === 'Endorsed to Deployment') {
+  $('#edit_trainee_status')
+    .on('mousedown.readonly', e => e.preventDefault())
+    .css({ backgroundColor: '#e9ecef', pointerEvents: 'none' })
+    .attr('data-readonly', 'true');
+
+  $('#edit_status_date') // ✅ corrected ID
+    .on('mousedown.readonly', e => e.preventDefault())
+    .css({ backgroundColor: '#e9ecef', pointerEvents: 'none' })
+    .attr('data-readonly', 'true');
+} else {
+  $('#edit_trainee_status')
+    .off('mousedown.readonly')
+    .css({ backgroundColor: '', pointerEvents: '' })
+    .removeAttr('data-readonly');
+
+  $('#edit_status_date') // ✅ corrected ID
+    .off('mousedown.readonly')
+    .css({ backgroundColor: '', pointerEvents: '' })
+    .removeAttr('data-readonly');
+}
+
+
+
+
+      
     },
     error: function () {
       $('#editModalTitle').text('Error loading data');
@@ -561,24 +605,55 @@ $('#mergedTable').on('click', '.scorecardBtn', function () {
   $('#scorecardModal').modal('show');
 
   // 🔁 Autofill via AJAX
-  $.ajax({
-    url: 'get_scorecard.php',
-    method: 'GET',
-    data: { id: currentEndorsementId },
-    dataType: 'json',
-    success: function (data) {
-      if (!data) return;
+ $.ajax({
+  url: 'get_scorecard.php',
+  method: 'GET',
+  data: { id: currentEndorsementId },
+  dataType: 'json',
+  success: function (data) {
+    if (!data) return;
 
-      $('[name=call_control]').val(data.call_control || '');
-      $('[name=rebuttals]').val(data.rebuttals || '');
-      $('[name=script_adherence]').val(data.script_adherence || '');
-      $('[name=professionalism]').val(data.professionalism || '');
-      $('[name=closing]').val(data.closing || '');
-      $('[name=product_knowledge]').val(data.product_knowledge || '');
-      $('[name=dialer_howto]').val(data.dialer_how_to || '');
-      $('[name=language]').val(data.language_101 || '');
-    }
-  });
+    // Populate score fields
+    $('[name=call_control]').val(data.call_control || '');
+    $('[name=rebuttals]').val(data.rebuttals || '');
+    $('[name=script_adherence]').val(data.script_adherence || '');
+    $('[name=professionalism]').val(data.professionalism || '');
+    $('[name=closing]').val(data.closing || '');
+    $('[name=product_knowledge]').val(data.product_knowledge || '');
+    $('[name=dialer_howto]').val(data.dialer_how_to || '');
+    $('[name=language]').val(data.language_101 || '');
+
+    // 🔒 Check training status and disable Save if endorsed to deployment
+    $.ajax({
+      url: 'get_training_single_record.php',
+      method: 'GET',
+      data: { id: currentEndorsementId },
+      dataType: 'json',
+      success: function (training) {
+        const actionBtn = $('#scorecardActionBtn');
+        const summary = $('#scoreSummary');
+
+        if (training.trainee_status === 'Endorsed to Deployment') {
+          actionBtn
+            .prop('disabled', true)
+            .addClass('disabled')
+            .text('Locked');
+          summary.html(`
+            <div class="alert alert-warning mt-2">
+              This trainee is already <strong>Endorsed to Deployment</strong>. Scorecard editing is disabled.
+            </div>
+          `);
+        } else {
+          actionBtn
+            .prop('disabled', false)
+            .removeClass('disabled')
+            .text('Calculate');
+        }
+      }
+    });
+  }
+});
+
 });
 
 
@@ -713,7 +788,8 @@ btn.text('Save').removeClass('btn-primary').addClass('btn-success');
        const canCheck = (
   data.batch &&
   data.trainee_status === '' &&
-  data.batch !== '0000-00-00 00:00:00'
+  data.batch !== '0000-00-00 00:00:00' &&
+  data.facilitator === currentTrainer
 );
 
    const checkboxCell = `
@@ -726,10 +802,10 @@ btn.text('Save').removeClass('btn-primary').addClass('btn-success');
   `;
 
    const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
-   
-       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00';
+ 
+       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00' || !data.trainee_status;
 const scorecardBtn = `
-  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : ''}>
+  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send training schedule to enable scorecard"' : ''}>
     <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
       data-id="${data.endorsement_id}" 
       data-name="${data.name.replace(/"/g, '&quot;')}"
@@ -744,7 +820,7 @@ const scorecardBtn = `
           data.name,
           data.batch,
           data.ta_credential,
-          data.trainer,
+          data.facilitator,
           data.day1_attendance === 'Yes'
   ? '<span class="badge bg-success">Yes</span>'
   : data.day1_attendance === 'No'
@@ -755,9 +831,11 @@ const scorecardBtn = `
           data.status_remarks,
           `<div class="d-flex gap-1">
              <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-              data-id="${data.endorsement_id}">
-              <i class="fa fa-edit"></i>
-            </button>
+        data-id="${data.endorsement_id}" 
+        data-facilitator="${data.facilitator}">
+  <i class="fa fa-edit"></i>
+</button>
+
             ${scorecardBtn}
            </div>`,
             checkboxCell,
@@ -819,7 +897,8 @@ $('#editForm').on('submit', function (e) {
        const canCheck = (
   data.batch &&
   data.trainee_status === '' &&
-  data.batch !== '0000-00-00 00:00:00'
+  data.batch !== '0000-00-00 00:00:00' &&
+  data.facilitator === currentTrainer
 );
 
    const checkboxCell = `
@@ -833,9 +912,9 @@ $('#editForm').on('submit', function (e) {
 
    const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
    
-       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00';
+       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00' || !data.trainee_status;
 const scorecardBtn = `
-  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : ''}>
+  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send training schedule to enable scorecard"' : ''}>
     <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
       data-id="${data.endorsement_id}" 
       data-name="${data.name.replace(/"/g, '&quot;')}"
@@ -850,7 +929,7 @@ const scorecardBtn = `
           data.name,
           data.batch,
           data.ta_credential,
-          data.trainer,
+          data.facilitator,
           data.day1_attendance === 'Yes'
   ? '<span class="badge bg-success">Yes</span>'
   : data.day1_attendance === 'No'
@@ -861,9 +940,11 @@ const scorecardBtn = `
           data.status_remarks,
           `<div class="d-flex gap-1">
              <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-              data-id="${data.endorsement_id}">
-              <i class="fa fa-edit"></i>
-            </button>
+        data-id="${data.endorsement_id}" 
+        data-facilitator="${data.facilitator}">
+  <i class="fa fa-edit"></i>
+</button>
+
             ${scorecardBtn}
            </div>`,
             checkboxCell,
@@ -996,7 +1077,8 @@ $('#confirmSendBtn').on('click', () => {
         const canCheck = (
   data.batch &&
   data.trainee_status === '' &&
-  data.batch !== '0000-00-00 00:00:00'
+  data.batch !== '0000-00-00 00:00:00' &&
+  data.facilitator === currentTrainer
 );
         const checkboxCell = `
     <input
@@ -1008,9 +1090,9 @@ $('#confirmSendBtn').on('click', () => {
   `;
 
   const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
-       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00';
+       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00' || !data.trainee_status;
 const scorecardBtn = `
-  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch to enable scorecard"' : ''}>
+  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send training schedule to enable scorecard"' : ''}>
     <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
       data-id="${data.endorsement_id}" 
       data-name="${data.name.replace(/"/g, '&quot;')}"
@@ -1027,7 +1109,7 @@ const scorecardBtn = `
           data.name,
           data.batch,
           data.ta_credential,
-          data.trainer,
+          data.facilitator,
           data.day1_attendance === 'Yes'
   ? '<span class="badge bg-success">Yes</span>'
   : data.day1_attendance === 'No'
@@ -1037,10 +1119,12 @@ const scorecardBtn = `
           data.status_date,
           data.status_remarks,
           `<div class="d-flex gap-1">
-  <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-    data-id="${data.endorsement_id}">
-    <i class="fa fa-edit"></i>
-  </button>
+ <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
+        data-id="${data.endorsement_id}" 
+        data-facilitator="${data.facilitator}">
+  <i class="fa fa-edit"></i>
+</button>
+
    ${scorecardBtn}
 </div>`,
             checkboxCell

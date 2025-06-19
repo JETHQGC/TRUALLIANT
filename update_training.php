@@ -7,13 +7,11 @@ header('Content-Type: application/json');
 // Collect and sanitize POST data
 $endorsement_id = intval($_POST['endorsement_id'] ?? 0);
 $batch = $_POST['batch'] ?? '';
-$trainer = $_POST['trainer'] ?? '';
 $day1_attendance = $_POST['attendance'] ?? '';
 $ta_credential = $_POST['credential'] ?? '';
 $trainee_status = $_POST['trainee_status'] ?? '';
 $status_date = $_POST['status_date'] ?? '';
 $status_remarks = $_POST['remarks'] ?? '';
-
 
 try {
   // Check if record exists
@@ -25,11 +23,26 @@ try {
   $check->close();
 
   if ($exists) {
-    // UPDATE
+    // Fetch current trainee_status and status_date
+    $current = $conn->prepare("SELECT trainee_status, status_date FROM training WHERE endorsement_id = ?");
+    $current->bind_param("i", $endorsement_id);
+    $current->execute();
+    $current->bind_result($existing_status, $existing_date);
+    $current->fetch();
+    $current->close();
+
+    // Only update status_date if transitioning to 'Endorsed to Deployment'
+    if ($trainee_status === 'Endorsed to Deployment' && $existing_status !== 'Endorsed to Deployment') {
+      $status_date = date('Y-m-d');
+    } else {
+      // Retain the existing date if status is unchanged or not transitioning
+      $status_date = $existing_date;
+    }
+
+    // Perform the UPDATE
     $upd = $conn->prepare("
       UPDATE training
           SET batch = ?,
-              trainer = ?,
               day1_attendance = ?,
               ta_credential = ?,
               trainee_status = ?,
@@ -38,9 +51,8 @@ try {
        WHERE endorsement_id = ?
     ");
     $upd->bind_param(
-      "sssssssi",
+      "ssssssi",
       $batch,
-      $trainer,
       $day1_attendance,
       $ta_credential,
       $trainee_status,
@@ -50,25 +62,29 @@ try {
     );
     $upd->execute();
     $upd->close();
+
   } else {
-    // INSERT
+    // First-time insert — set current date if status is 'Endorsed to Deployment'
+    if ($trainee_status === 'Endorsed to Deployment') {
+      $status_date = date('Y-m-d');
+    }
+
+    // Perform the INSERT
     $ins = $conn->prepare("
       INSERT INTO training (
         endorsement_id,
         batch,
-        trainer,
         day1_attendance,
         ta_credential,
         trainee_status,
         status_date,
         status_remarks
-      ) VALUES (?,?,?,?,?,?,?,?)
+      ) VALUES (?,?,?,?,?,?,?)
     ");
     $ins->bind_param(
-      "isssssss",
+      "issssss",
       $endorsement_id,
       $batch,
-      $trainer,
       $day1_attendance,
       $ta_credential,
       $trainee_status,

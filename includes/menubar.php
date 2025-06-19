@@ -131,5 +131,14 @@ $isAdminUser = strpos($username, 'admin') === 0;
         <i class="fa fa-chalkboard-teacher"></i> Training
       </a>
     </li>
+
+    <li class="nav-item">
+      <a href="deployment.php"
+         class="nav-link d-flex align-items-center gap-2 rounded-0
+           <?php echo $currentPage === 'deployment.php' ? 'nav-gradient text-white fw-semibold' : ''; ?>
+           <?php echo !$isTrainerUser ? 'disabled' : ''; ?>">
+        <i class="fa fa-chalkboard-teacher"></i> Deployment
+      </a>
+    </li>
   </ul>
 </div>

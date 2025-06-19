@@ -86,6 +86,7 @@ $sql = "
   SELECT 
     s.source_id,
     s.source_date,
+    s.recruiter,
     p.name, p.phone, p.age, p.birthdate, p.email, p.address,
     p.city_municipality, p.educational_attainment, p.name_of_school, p.year_last_attended,
     i.bpo_exp,
@@ -208,6 +209,7 @@ function getFixedColorClass($value, $map) {
         <th>Source Date</th>
         <th>Name</th>
         <th>Shift</th>
+        <th>Recruiter</th>
         <th>Facilitator</th>
         <th>Confirmation</th>
         <th>Second Confirmation</th>
@@ -228,6 +230,7 @@ function getFixedColorClass($value, $map) {
            <td><?= $row['source_date'] ?></td>
           <td><?= $row['name'] ?></td>
           <td><?= $row['shift'] ?></td>
+          <td><?= $row['recruiter'] ?></td>
           <td><?= $row['facilitator'] ?></td>
           <td><?= $row['confirmation'] ?></td>
           <td><?= $row['second_confirmation'] ?></td>
@@ -265,6 +268,7 @@ function getFixedColorClass($value, $map) {
     value="<?= $row['source_id'] ?>"
     <?= (
       empty($row['shift']) ||
+      empty($row['recruiter']) ||
       empty($row['facilitator']) ||
       empty($row['confirmation']) ||
       empty($row['second_confirmation']) ||
@@ -276,7 +280,8 @@ function getFixedColorClass($value, $map) {
       empty($row['signed_contract']) ||
       $row['signed_contract'] !== 'Yes' ||
       empty($row['date_endorsed']) ||
-      $row['date_endorsed'] !== '0000-00-00'
+      $row['date_endorsed'] !== '0000-00-00' ||
+      $row['recruiter'] !== $user['name']
     ) ? 'disabled' : '' ?>
   >
 </td>
@@ -331,7 +336,7 @@ function getFixedColorClass($value, $map) {
 
 <script>
    
-
+const currentRecruiter = <?= json_encode($user['name']); ?>;
 
 const sourceColorMap = {
   'Facebook': 'badge-color-1',
@@ -432,7 +437,16 @@ $('#mergedTable').on('click', '.editBtn', function () {
    currentRow = $(this).closest('tr'); // 🔧 Store the current table row
   const data = $(this).data('id'); // JSON-parsed row data
 
-
+if (data.recruiter !== currentRecruiter) {
+  $('#alertContainer').html(`
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fa fa-exclamation-triangle me-2"></i>
+      You’re not the assigned recruiter for this record.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `);
+  return;
+}
 
 
 
@@ -528,6 +542,7 @@ $('#editForm').on('submit', function (e) {
         const table = $('#mergedTable').DataTable();
        const canCheck = (
   data.shift &&
+  data.recruiter &&
   data.facilitator &&
   data.confirmation &&
   data.second_confirmation &&
@@ -539,7 +554,8 @@ $('#editForm').on('submit', function (e) {
   data.date_endorsed &&
   data.signed_contract &&
   data.signed_contract === 'Yes' &&
-  data.date_endorsed == '0000-00-00'
+  data.date_endorsed == '0000-00-00' &&
+  data.recruiter === currentRecruiter
 );
 
    const checkboxCell = `
@@ -555,6 +571,7 @@ $('#editForm').on('submit', function (e) {
           data.source_date,
           data.name,
           data.shift,
+          data.recruiter,
           data.facilitator,
           data.confirmation,
           data.second_confirmation,
@@ -703,6 +720,7 @@ $('#confirmSendBtn').on('click', () => {
         // rebuild the row array exactly as your table expects:
         const canCheck = (
   data.shift &&
+  data.recruiter &&
   data.facilitator &&
   data.confirmation &&
   data.second_confirmation &&
@@ -714,7 +732,8 @@ $('#confirmSendBtn').on('click', () => {
   data.signed_contract &&
   data.signed_contract === 'Yes' &&
   data.date_endorsed &&
-  data.date_endorsed == '0000-00-00'
+  data.date_endorsed == '0000-00-00' &&
+  data.recruiter === currentRecruiter
 );
         const checkboxCell = `
     <input
@@ -731,6 +750,7 @@ $('#confirmSendBtn').on('click', () => {
           data.source_date,
           data.name,
           data.shift,
+          data.recruiter,
           data.facilitator,
           data.confirmation,
           data.second_confirmation,

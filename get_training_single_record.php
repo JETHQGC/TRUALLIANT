@@ -7,8 +7,8 @@ $sql = " SELECT
     p.name, p.phone, p.age, p.birthdate, p.email, p.address,
     p.city_municipality, p.educational_attainment, p.name_of_school, p.year_last_attended,
     i.bpo_exp,
-    e.date_endorsed, e.endorsement_id,
-    t.batch, t.trainer, t.day1_attendance, t.ta_credential, t.trainee_status, t.status_date, t.status_remarks
+    e.date_endorsed, e.endorsement_id, e.facilitator,
+    t.batch, t.day1_attendance, t.ta_credential, t.trainee_status, t.status_date, t.status_remarks
   FROM source s
   LEFT JOIN personal_info p ON s.source_id = p.source_id
   LEFT JOIN endorsement e ON s.source_id = e.source_id

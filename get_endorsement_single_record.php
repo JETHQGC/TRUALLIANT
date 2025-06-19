@@ -5,6 +5,7 @@ $id = $_GET['id'];
 $sql = "  SELECT 
     s.source_id,
     s.source_date,
+    s.recruiter,
     p.name, p.phone, p.age, p.birthdate, p.email, p.address,
     p.city_municipality, p.educational_attainment, p.name_of_school, p.year_last_attended,
     i.bpo_exp,

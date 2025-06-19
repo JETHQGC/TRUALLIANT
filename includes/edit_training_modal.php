@@ -180,10 +180,7 @@
 
 
 
-    <div class="col-md-6 mb-3">
-      <label class="form-label">Trainer</label>
-      <input type="text" class="form-control" id="edit_trainer" name="trainer">
-</div>
+ 
     <div class="col-md-6 mb-3">
       <label class="form-label">Day 1 Attendance</label>
       <select class="form-select" id="edit_attendance" name="attendance">
@@ -228,21 +225,9 @@
     <option value="Konnect Leads - Nesting">Konnect Leads - Nesting</option>
 
     <!-- Premium Programs -->
-    <option value="Deployment Pool - Premium">Deployment Pool - Premium</option>
-    <option value="Premium - Synergy">Premium - Synergy</option>
-    <option value="Premium - Zinnia Health Intake">Premium - Zinnia Health Intake</option>
-    <option value="Premium - Ramzey CS">Premium - Ramzey CS</option>
-    <option value="Premium - Simpson">Premium - Simpson</option>
-    <option value="Premium - We Level Up">Premium - We Level Up</option>
-    <option value="Premium - Dan Fulfillment">Premium - Dan Fulfillment</option>
-    <option value="Premium - Ryan Simpson Financial">Premium - Ryan Simpson Financial</option>
-
-    <!-- Endorsements and Other Statuses -->
-    <option value="Women's Society-Premium">Women's Society-Premium</option>
-    <option value="Deployment Pool - T4">Deployment Pool - T4</option>
-    <option value="Deployment Pool - VSS">Deployment Pool - VSS</option>
-    <option value="Endorsed - Support">Endorsed - Support</option>
-    <option value="Zeta PHARMA">Zeta PHARMA</option>
+    
+    <option value="Endorsed to Deployment">Endorsed to Deployment</option>
+    <option value="Passed">Passed</option>
    
   </select>
 </div>
@@ -260,6 +245,8 @@
       <label class="form-label">Status Remarks</label>
       <input type="text" class="form-control" id="edit_remarks" name="remarks">
 </div>
+
+
 
 
  
