@@ -32,6 +32,8 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
       header('Location: dashboard_trainer.php');
     } elseif (strpos($actualUsername, 'admin') === 0) {
       header('Location: dashboard_admin.php');
+    } elseif (strpos($actualUsername, 'workforce') === 0) {
+      header('Location: dashboard_workforce.php');
     }
     else {
       header('Location: index.php');

@@ -7,6 +7,7 @@
   $isRecruitmentUser = strpos($username, 'recruiter') === 0;
   $isTrainerUser = strpos($username, 'trainer') === 0;
 $isAdminUser = strpos($username, 'admin') === 0;
+$isWorkforceUser = strpos($username, 'workforce') === 0;
   // Set dashboard file based on user role
   if ($isSourceUser) {
     $dashboardPage = 'dashboard_source.php';
@@ -17,6 +18,9 @@ $isAdminUser = strpos($username, 'admin') === 0;
   } elseif ($isAdminUser) {
     $dashboardPage = 'dashboard_admin.php';
   } 
+  elseif ($isWorkforceUser) {
+    $dashboardPage = 'dashboard_workforce.php';
+  }
   else {
     $dashboardPage = 'dashboard.php'; // fallback
   }
@@ -136,7 +140,7 @@ $isAdminUser = strpos($username, 'admin') === 0;
       <a href="deployment.php"
          class="nav-link d-flex align-items-center gap-2 rounded-0
            <?php echo $currentPage === 'deployment.php' ? 'nav-gradient text-white fw-semibold' : ''; ?>
-           <?php echo !$isTrainerUser ? 'disabled' : ''; ?>">
+           <?php echo !$isWorkforceUser ? 'disabled' : ''; ?>">
         <i class="fa fa-chalkboard-teacher"></i> Deployment
       </a>
     </li>

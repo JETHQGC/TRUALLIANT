@@ -32,9 +32,56 @@ try {
     $current->close();
 
     // Only update status_date if transitioning to 'Endorsed to Deployment'
-    if ($trainee_status === 'Endorsed to Deployment' && $existing_status !== 'Endorsed to Deployment') {
-      $status_date = date('Y-m-d');
-    } else {
+if ($trainee_status === 'Endorsed to Deployment' && $existing_status !== 'Endorsed to Deployment') {
+    $status_date = date('Y-m-d');
+
+    // Fetch personal info
+    $info = $conn->prepare("
+        SELECT pi.name, pi.birthdate, pi.address, pi.phone, pi.email
+        FROM personal_info pi
+        INNER JOIN endorsement e ON pi.source_id = e.source_id
+        WHERE e.endorsement_id = ?
+    ");
+    $info->bind_param("i", $endorsement_id);
+    $info->execute();
+    $info->store_result();
+    $info->bind_result($name, $birthdate, $address, $phone, $email);
+
+    if ($info->num_rows > 0 && $info->fetch()) {
+        // Check if already in employee table
+        $checkEmp = $conn->prepare("SELECT 1 FROM employee WHERE employee_name = ? AND date_hired = ?");
+        $checkEmp->bind_param("ss", $name, $status_date);
+        $checkEmp->execute();
+        $checkEmp->store_result();
+        $alreadyExists = $checkEmp->num_rows > 0;
+        $checkEmp->close();
+
+        if (!$alreadyExists) {
+            $emp_id = ''; // Leave blank
+            $emp_status = 'New';
+
+            $insert = $conn->prepare("
+                INSERT INTO employee (
+                    emp_id, employee_name, birthdate, address, mobile_no,
+                    email_address, tin, sss, phic, pag_ibig,
+                    date_hired, department, position, emp_status
+                ) VALUES (?, ?, ?, ?, ?, ?, '', '', '', '', ?, '', '', ?)
+            ");
+            $insert->bind_param(
+                "ssssssss", // 8 variables
+                $emp_id, $name, $birthdate, $address, $phone,
+                $email, $status_date, $emp_status
+            );
+            $insert->execute();
+            $insert->close();
+        }
+    }
+
+    $info->close();
+}
+
+
+ else {
       // Retain the existing date if status is unchanged or not transitioning
       $status_date = $existing_date;
     }

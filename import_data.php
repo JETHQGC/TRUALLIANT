@@ -11,7 +11,7 @@ $names = ['Cristiel', 'Francis', 'Jonelyn', 'Joeneliza', 'Angel'];
 $counter = 1; // start from source1
 
 foreach ($names as $name) {
-    $username = "trainer" . $counter;
+    $username = "workforce" . $counter;
     $plainPassword = '1111';
     $email = $username . '@company.com';
     $hashedPassword = password_hash($plainPassword, PASSWORD_BCRYPT);
