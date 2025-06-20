@@ -13,7 +13,7 @@ table {
   .datatable-controls,
   .datatable-footer {
     background: #fff;
-    z-index: 10;
+    z-index: 1;
   }
 
   .datatable-controls {
