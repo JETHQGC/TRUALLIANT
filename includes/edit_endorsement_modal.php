@@ -62,94 +62,91 @@ include 'includes/conn.php';
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
   <div class="row gx-4">
+
     <!-- Source Info Panel -->
- <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-           <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Source Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
+        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white fw-semibold" style="letter-spacing: 0.3px;">
+            Source Information
+            <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">ID</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_id" name="source_id">
+              <input readonly type="text" class="form-control answer-box fw-bold" id="edit_source_id" name="source_id">
             </dd>
 
-                        <dt class="col-sm-4 text-muted">Source Date</dt>
+            <dt class="col-sm-4 text-muted">Source Date</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_date" name="source_date">
+              <input readonly type="text" class="form-control answer-box fw-bold" id="edit_source_date" name="source_date">
             </dd>
-
-
-            
-
           </dl>
         </div>
       </div>
     </div>
 
     <!-- Personal Info Panel -->
-     <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-4">
       <div class="card border-0 shadow-sm h-100">
-          <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Personal Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
+        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white fw-semibold" style="letter-spacing: 0.3px;">
+            Personal Information
+            <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
         <div class="card-body">
           <dl class="row mb-0" id="detailsTab">
             <dt class="col-sm-4 text-muted">Name</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_name" name="name">
+              <input readonly type="text" class="form-control answer-box fw-bold" id="edit_name" name="name">
             </dd>
 
             <dt class="col-sm-4 text-muted">Phone</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_phone" name="phone">
+              <input readonly type="text" class="form-control answer-box" id="edit_phone" name="phone">
             </dd>
 
             <dt class="col-sm-4 text-muted">Age</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_age" name="age">
+              <input readonly type="text" class="form-control answer-box" id="edit_age" name="age">
             </dd>
 
             <dt class="col-sm-4 text-muted">Birthdate</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_birthdate" name="birthdate">
+              <input readonly type="text" class="form-control answer-box" id="edit_birthdate" name="birthdate">
             </dd>
 
             <dt class="col-sm-4 text-muted">Email</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_email" name="email">
+              <input readonly type="text" class="form-control answer-box" id="edit_email" name="email">
             </dd>
 
             <dt class="col-sm-4 text-muted">Address</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_address" name="address">
+              <input readonly type="text" class="form-control answer-box" id="edit_address" name="address">
             </dd>
 
             <dt class="col-sm-4 text-muted">City / Municipality</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_city_municipality" name="city_municipality">
+              <input readonly type="text" class="form-control answer-box" id="edit_city_municipality" name="city_municipality">
             </dd>
 
             <dt class="col-sm-4 text-muted">Education</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_educational_attainment" name="educational_attainment">
+              <input readonly type="text" class="form-control answer-box" id="edit_educational_attainment" name="educational_attainment">
             </dd>
 
             <dt class="col-sm-4 text-muted">School</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_name_of_school" name="name_of_school">
+              <input readonly type="text" class="form-control answer-box" id="edit_name_of_school" name="name_of_school">
             </dd>
 
             <dt class="col-sm-4 text-muted">Year Last Attended</dt>
             <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_year_last_attended" name="year_last_attended">
+              <input readonly type="text" class="form-control answer-box" id="edit_year_last_attended" name="year_last_attended">
             </dd>
           </dl>
         </div>
@@ -158,6 +155,23 @@ include 'includes/conn.php';
   </div>
 </div>
 
+<!-- Custom styling -->
+<style>
+  .answer-box {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 6px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #212529;
+  }
+
+  .answer-box[readonly] {
+    background: #ffffff;
+    cursor: default;
+  }
+</style>
 
 
             <!-- INTERVIEW TAB -->

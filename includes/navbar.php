@@ -1,6 +1,6 @@
 <!-- HEADER WITH ANIMATED STARFIELD -->
-<header class="navbar navbar-expand-lg navbar-dark px-3 position-relative d-flex justify-content-between align-items-center"
-        style="height: 70px; background: linear-gradient(to right, #0e1e40, rgb(59, 69, 88), #0e1e40); font-family: 'Poppins', sans-serif;">
+<header class="navbar navbar-expand-lg navbar-dark px-3 position-fixed top-0 w-100 d-flex justify-content-between align-items-center"
+        style="height: 70px; background: linear-gradient(to right, #0e1e40, rgb(59, 69, 88), #0e1e40); font-family: 'Poppins', sans-serif; z-index: 1030;">
 
   <!-- Starfield Background Layer -->
   <div class="starfield"></div>
@@ -41,11 +41,17 @@
   </div>
 </header>
 
-<!-- STARFIELD BACKGROUND STYLE -->
+<!-- STARFIELD & BODY OFFSET STYLE -->
 <style>
+  /* Body content offset to prevent overlap with fixed header */
+  body {
+    padding-top: 70px; /* Matches the height of the header */
+  }
+
   .starfield {
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: 1;

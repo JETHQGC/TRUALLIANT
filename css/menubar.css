@@ -1,20 +1,14 @@
 /* Sidebar container */
 .position-sticky {
-
-  background-color: #0e1e40;
+  background: linear-gradient(to bottom, #0e1e40, rgb(59, 69, 88), #0e1e40);
   color: white;
   font-family: 'Poppins', sans-serif;
   border-radius: 12px;
   margin: 10px;
   padding: 10px;
-  overflow-y: auto; /* scrolls internally if its own content is long */
+  overflow-y: auto;
   height: 100%;
 }
-
-
-
-
-
 
 
 /* Base nav link styling */
@@ -61,8 +55,6 @@
   font-weight: 600 !important;
 }
 
-
-
 /* Modal navbar disable - make it faded white */
 .nav-link.disabled {
   pointer-events: none;
@@ -70,3 +62,39 @@
   color: rgba(255, 255, 255, 0.7) !important; /* light faded white */
 }
 
+
+
+.static-sidebar {
+  position: fixed;
+  top: 80px;
+  left: 15px;
+  width: 250px;
+  height: calc(97vh - 70px);
+  background: linear-gradient(to bottom, #0e1e40, rgb(59, 69, 88), #0e1e40); /* proper gradient */
+  border-right: 200px linear-gradient(to bottom, #0e1e40, rgb(59, 69, 88), #0e1e40);
+  border-left: 200px linear-gradient(to bottom, #0e1e40, rgb(59, 69, 88), #0e1e40);
+  padding: 40px 0;
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  overflow-y: auto;
+  z-index: 999;
+  box-shadow: 2px 0 10px rgba(100, 100, 100, 0.25);
+  border-radius: 0 20px 20px 0;
+  transition: all 0.3s ease;
+}
+
+
+/* Scrollbar styling */
+.static-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.static-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.static-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+.static-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}

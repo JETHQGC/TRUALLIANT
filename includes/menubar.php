@@ -6,7 +6,8 @@
   $isSourceUser = strpos($username, 'source') === 0;
   $isRecruitmentUser = strpos($username, 'recruiter') === 0;
   $isTrainerUser = strpos($username, 'trainer') === 0;
-$isAdminUser = strpos($username, 'admin') === 0;
+  $isAdminUser = strpos($username, 'admin') === 0;
+
   // Set dashboard file based on user role
   if ($isSourceUser) {
     $dashboardPage = 'dashboard_source.php';
@@ -16,30 +17,73 @@ $isAdminUser = strpos($username, 'admin') === 0;
     $dashboardPage = 'dashboard_trainer.php';
   } elseif ($isAdminUser) {
     $dashboardPage = 'dashboard_admin.php';
-  } 
-  else {
+  } else {
     $dashboardPage = 'dashboard.php'; // fallback
   }
 
   $recruitmentPages = ['source.php', 'interview.php', 'assessment.php', 'orientation.php', 'endorsement.php'];
   $isRecActive = in_array($currentPage, $recruitmentPages);
 ?>
+
+<!-- Orbit CSS -->
+<style>
+.profile-orbit {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+.profile-orbit img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+.orbit-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  animation: rotateOrbit 8s linear infinite;
+  z-index: 1;
+}
+.orbit-dot {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px 2px rgba(255,255,255,0.6);
+}
+@keyframes rotateOrbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+</style>
+
 <div class="position-sticky pt-3">
   <!-- USER PROFILE -->
   <div class="d-flex align-items-center px-3 py-3 border-bottom">
-  <img src="images/profile.jpg" alt="User Image" class="rounded-circle me-3" width="45" height="45">
-  <div>
-    <!-- Display the name instead of username -->
-    <div class="fw-semibold mb-1" style="font-size:14px;"><?php echo htmlspecialchars($name); ?></div>
-
-    <!-- Show "Online" status with username -->
-    <div class="d-flex align-items-center text-success gap-1" style="font-size:13px;">
-      <span class="d-inline-block rounded-circle bg-success" style="width:10px;height:10px;"></span>
-      <?php echo htmlspecialchars($username); ?>
+    <div class="profile-orbit me-3">
+      <img src="images/profile.jpg" alt="User Image">
+      <div class="orbit-container">
+        <div class="orbit-dot"></div>
+      </div>
+    </div>
+    <div>
+      <div class="fw-semibold mb-1" style="font-size:14px;"><?php echo htmlspecialchars($name); ?></div>
+      <div class="d-flex align-items-center text-success gap-1" style="font-size:13px;">
+        <span class="d-inline-block rounded-circle bg-success" style="width:10px;height:10px;"></span>
+        <?php echo htmlspecialchars($username); ?>
+      </div>
     </div>
   </div>
-</div>
-
 
   <!-- MAIN NAVIGATION -->
   <ul class="nav flex-column mt-3">
@@ -63,61 +107,25 @@ $isAdminUser = strpos($username, 'admin') === 0;
       </a>
       <div class="collapse <?php echo $isRecActive ? 'show' : ''; ?>" id="recruitmentSubmenu">
         <ul class="nav flex-column ps-3">
-
-          <!-- SOURCE -->
-          <li class="nav-item">
-            <a href="source.php"
-               class="nav-link d-flex align-items-center gap-2 rounded-0
-                 <?php echo $currentPage === 'source.php' ? 'text-primary fw-semibold' : ''; ?>
-                 <?php echo !$isSourceUser ? 'disabled' : ''; ?>">
-              <i class="<?php echo $currentPage === 'source.php' ? 'fas' : 'far'; ?> fa-circle" style="width:20px;"></i>
-              Source
-            </a>
-          </li>
-
-          <!-- INTERVIEW -->
-          <li class="nav-item">
-            <a href="interview.php"
-               class="nav-link d-flex align-items-center gap-2 rounded-0
-                 <?php echo $currentPage === 'interview.php' ? 'text-primary fw-semibold' : ''; ?>
-                 <?php echo !$isRecruitmentUser ? 'disabled' : ''; ?>">
-              <i class="<?php echo $currentPage === 'interview.php' ? 'fas' : 'far'; ?> fa-circle" style="width:20px;"></i>
-              Interview
-            </a>
-          </li>
-
-          <!-- ASSESSMENT -->
-          <li class="nav-item">
-            <a href="assessment.php"
-               class="nav-link d-flex align-items-center gap-2 rounded-0
-                 <?php echo $currentPage === 'assessment.php' ? 'text-primary fw-semibold' : ''; ?>
-                 <?php echo !$isRecruitmentUser ? 'disabled' : ''; ?>">
-              <i class="<?php echo $currentPage === 'assessment.php' ? 'fas' : 'far'; ?> fa-circle" style="width:20px;"></i>
-              Assessment
-            </a>
-          </li>
-
-          <!-- ORIENTATION -->
-          <li class="nav-item">
-            <a href="orientation.php"
-               class="nav-link d-flex align-items-center gap-2 rounded-0
-                 <?php echo $currentPage === 'orientation.php' ? 'text-primary fw-semibold' : ''; ?>
-                 <?php echo !$isRecruitmentUser ? 'disabled' : ''; ?>">
-              <i class="<?php echo $currentPage === 'orientation.php' ? 'fas' : 'far'; ?> fa-circle" style="width:20px;"></i>
-              Orientation
-            </a>
-          </li>
-
-          <!-- ENDORSEMENT -->
-          <li class="nav-item">
-            <a href="endorsement.php"
-               class="nav-link d-flex align-items-center gap-2 rounded-0
-                 <?php echo $currentPage === 'endorsement.php' ? 'text-primary fw-semibold' : ''; ?>
-                 <?php echo !$isRecruitmentUser ? 'disabled' : ''; ?>">
-              <i class="<?php echo $currentPage === 'endorsement.php' ? 'fas' : 'far'; ?> fa-circle" style="width:20px;"></i>
-              Endorsement
-            </a>
-          </li>
+          <?php
+          $subPages = [
+            'source.php' => $isSourceUser,
+            'interview.php' => $isRecruitmentUser,
+            'assessment.php' => $isRecruitmentUser,
+            'orientation.php' => $isRecruitmentUser,
+            'endorsement.php' => $isRecruitmentUser
+          ];
+          foreach ($subPages as $page => $hasAccess) {
+            $isActive = $currentPage === $page;
+            $label = ucfirst(basename($page, '.php'));
+            echo '<li class="nav-item">
+                    <a href="'.$page.'" class="nav-link d-flex align-items-center gap-2 rounded-0 '.
+                    ($isActive ? 'text-primary fw-semibold' : '').' '.(!$hasAccess ? 'disabled' : '').'">
+                      <i class="'.($isActive ? 'fas' : 'far').' fa-circle" style="width:20px;"></i> '.$label.'
+                    </a>
+                  </li>';
+          }
+          ?>
         </ul>
       </div>
     </li>
@@ -132,6 +140,7 @@ $isAdminUser = strpos($username, 'admin') === 0;
       </a>
     </li>
 
+    <!-- Deployment -->
     <li class="nav-item">
       <a href="deployment.php"
          class="nav-link d-flex align-items-center gap-2 rounded-0
