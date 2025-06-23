@@ -177,7 +177,7 @@ function getFixedColorClass($value, $map) {
 
     <thead class="table-light">
       <tr>
-        <th>ID</th>
+        <th>Source No.</th>
         <th>Mode</th>
         <th>Date</th>
         <th>Source</th>

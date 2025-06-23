@@ -82,7 +82,13 @@
 <?php
 // assumes session.php has set $user['name'], but we no longer filter by recruiter here
 
-$sql = "SELECT * from employee ORDER BY id DESC";
+$sql = "
+    SELECT employee.*, campaign.assigned_date, campaign.removal_reason, campaign.recommendation, campaign.campaign, campaign.cluster
+    FROM employee
+    LEFT JOIN campaign ON employee.id = campaign.employee_id
+    ORDER BY employee.id DESC
+";
+
 
 
 $stmt = $conn->prepare($sql);
@@ -125,12 +131,12 @@ $statusColorMap = [
   'Pending' => 'badge-color-12',
 
   // Termination Reasons
-  'No Show Day 1 - Endorsed to Recruitment' => 'badge-color-13',
-  'Terminated - Training Absences' => 'badge-color-14',
-  'Terminated - Trainee Poor Performance' => 'badge-color-15',
-  'Terminated - Resigned' => 'badge-color-16',
-  'Terminated - Nesting Absences' => 'badge-color-17',
-  'Terminated - Nesting Poor Performance' => 'badge-color-18',
+  'New' => 'badge-color-13',
+  'Active' => 'badge-color-14',
+  'Terminated' => 'badge-color-15',
+  'Resigned' => 'badge-color-16',
+  'RTWO' => 'badge-color-17',
+  'AWOL' => 'badge-color-18',
 
   // Training Assignments
   'Training - ADP' => 'badge-color-19',
@@ -206,6 +212,7 @@ function getFixedColorClass($value, $map) {
     <thead class="table-light">
       
       <tr>
+        <th>No.</th>
         <th>Emp ID</th>
         <th>Name</th>
         <th>TIN</th>
@@ -213,8 +220,9 @@ function getFixedColorClass($value, $map) {
         <th>PHIC</th>
         <th>HDMF</th>
         <th>Date Hired</th>
-        <th>Department</th>
         <th>Position</th>
+        <th>Campaign</th>
+         <th>Department</th>
         <th>Employment Status</th>
         <th>Action</th>
        
@@ -224,6 +232,7 @@ function getFixedColorClass($value, $map) {
     <tbody>
       <?php foreach ($rows as $row): ?>
         <tr>
+          <td><?= $row['id'] ?></td>
           <td><?= $row['emp_id'] ?></td>
           <td><?= htmlspecialchars($row['employee_name'], ENT_QUOTES) ?></td>
           <td><?= htmlspecialchars($row['tin'], ENT_QUOTES) ?></td>
@@ -231,15 +240,19 @@ function getFixedColorClass($value, $map) {
           <td><?= htmlspecialchars($row['phic'], ENT_QUOTES) ?></td>
           <td><?= htmlspecialchars($row['pag_ibig'], ENT_QUOTES) ?></td>
           <td><?= $row['date_hired'] ?></td>
-          <td><?= htmlspecialchars($row['department'], ENT_QUOTES) ?></td>
           <td><?= htmlspecialchars($row['position'], ENT_QUOTES) ?></td>
-          <td><?= htmlspecialchars($row['emp_status'], ENT_QUOTES) ?></td>
+          <td><?= htmlspecialchars($row['campaign'], ENT_QUOTES) ?></td>
+          <td><?= htmlspecialchars($row['cluster'], ENT_QUOTES) ?></td>
+          
+             <td> <span class="badge <?= getFixedColorClass(!empty($row['emp_status']) ? $row['emp_status'] : 'Pending', $statusColorMap) ?>">
+    <?= strtoupper(!empty($row['emp_status']) ? $row['emp_status'] : 'Pending') ?>
+  </span></td>
           
           <td>
          <div class="d-flex gap-1">
   <!-- Edit Button -->
   <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;" 
-    data-id="<?= $row['emp_id'] ?>">
+    data-id="<?= $row['id'] ?>">
     
     <i class="fa fa-edit"></i>
   </button>
@@ -276,8 +289,9 @@ function getFixedColorClass($value, $map) {
       </footer>
 
 <!-- Edit Modal -->
-  <?php include 'includes/edit_training_modal.php'; ?>
-   <?php include 'includes/send_training_schedule_modal.php'; ?>
+  <?php include 'includes/edit_deployment_modal.php'; ?>
+
+ <?php include 'includes/send_training_schedule_modal.php'; ?>
   <?php include 'includes/edit_scorecard_modal.php'; ?>
 
 
@@ -292,7 +306,7 @@ function getFixedColorClass($value, $map) {
 
 
 <script>
-   const currentTrainer = <?= json_encode($user['name']); ?>;
+
 
 
 const sourceColorMap = {
@@ -314,12 +328,15 @@ const statusColorMap = {
   "Pending": "badge-color-12",
 
   // Termination Reasons
-  "No Show Day 1 - Endorsed to Recruitment": "badge-color-13",
-  "Terminated - Training Absences": "badge-color-14",
-  "Terminated - Trainee Poor Performance": "badge-color-15",
-  "Terminated - Resigned": "badge-color-16",
-  "Terminated - Nesting Absences": "badge-color-17",
-  "Terminated - Nesting Poor Performance": "badge-color-18",
+
+
+    // Termination Reasons
+  "New" : "badge-color-13",
+  "Active": "badge-color-14",
+  "Terminated": "badge-color-15",
+  "Resigned": "badge-color-16",
+  "RTWO": "badge-color-17",
+  "AWOL": "badge-color-18",
 
   // Training Assignments
   "Training - ADP": "badge-color-19",
@@ -413,87 +430,45 @@ let currentRow = null;
 
 $('#mergedTable').on('click', '.editBtn', function () {
   currentRow = $(this).closest('tr');
-  const endorsementId = $(this).data('id');
-  const facilitator = $(this).data('facilitator');
-
-
-  if (facilitator !== currentTrainer) {
-  $('#alertContainer').html(`
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <i class="fa fa-exclamation-triangle me-2"></i>
-      You’re not the assigned Trainer for this record.
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  `);
-  return;
-}
-
+  const employeeId = $(this).data('id');
+ 
   // Show loading while fetching
   $('#editModalTitle').text('Loading...');
   $('#editModal').modal('show');
-  $('#editForm input, #editForm select, #editForm textarea').prop('disabled', true);
+
 
   $.ajax({
-    url: 'get_training_single_record.php',
+    url: 'get_deployment_single_record.php',
     method: 'GET',
-    data: { id: endorsementId },
+    data: { id: employeeId },
     dataType: 'json',
     success: function (data) {
-      $('#editModalTitle').text(data.name || 'Edit Record');
+      $('#editModalTitle').text(data.employee_name || 'Edit Record');
 
       // Source Info
-      $('#edit_source_id').val(data.source_id);
-      $('#edit_date_endorsed').val(data.date_endorsed);
-      $('#edit_endorsement_id').val(data.endorsement_id);
+      $('#edit_id').val(data.id);
+     
 
       // Personal Info
-      $('#edit_name').val(data.name);
-      $('#edit_phone').val(data.phone);
-      $('#edit_age').val(data.age);
+      $('#edit_name').val(data.employee_name);
+      $('#edit_phone').val(data.mobile_no);
       $('#edit_birthdate').val(data.birthdate);
-      $('#edit_email').val(data.email);
+      $('#edit_email').val(data.email_address);
       $('#edit_address').val(data.address);
-      $('#edit_city_municipality').val(data.city_municipality);
-      $('#edit_educational_attainment').val(data.educational_attainment);
-      $('#edit_name_of_school').val(data.name_of_school);
-      $('#edit_year_last_attended').val(data.year_last_attended);
+  
+
+
 
       // Training Info
-      $('#edit_batch').val(data.batch || '');
-      $('#edit_attendance').val(data.day1_attendance || '');
-      $('#edit_credential').val(data.ta_credential || '');
-      $('#edit_trainee_status').val(data.trainee_status || '');
-      $('#edit_status_date').val(data.status_date || '');
-      $('#edit_remarks').val(data.status_remarks || '');
+      $('#edit_emp_id').val(data.emp_id || '');
+      $('#edit_tin').val(data.tin || '');
+      $('#edit_sss').val(data.sss || '');
+      $('#edit_phic').val(data.phic || '');
+      $('#edit_pag_ibig').val(data.pag_ibig || '');
+      $('#edit_position').val(data.position || '');
+      $('#edit_status').val(data.emp_status || '');
 
     
-
-      $('#editForm input, #editForm select, #editForm textarea').prop('disabled', false);
-
-if (data.trainee_status === 'Endorsed to Deployment') {
-  $('#edit_trainee_status')
-    .on('mousedown.readonly', e => e.preventDefault())
-    .css({ backgroundColor: '#e9ecef', pointerEvents: 'none' })
-    .attr('data-readonly', 'true');
-
-  $('#edit_status_date') // ✅ corrected ID
-    .on('mousedown.readonly', e => e.preventDefault())
-    .css({ backgroundColor: '#e9ecef', pointerEvents: 'none' })
-    .attr('data-readonly', 'true');
-} else {
-  $('#edit_trainee_status')
-    .off('mousedown.readonly')
-    .css({ backgroundColor: '', pointerEvents: '' })
-    .removeAttr('data-readonly');
-
-  $('#edit_status_date') // ✅ corrected ID
-    .off('mousedown.readonly')
-    .css({ backgroundColor: '', pointerEvents: '' })
-    .removeAttr('data-readonly');
-}
-
-
-
 
       
     },
@@ -513,289 +488,8 @@ if (data.trainee_status === 'Endorsed to Deployment') {
 
 
 
-let currentEndorsementId = null;
-$('#mergedTable').on('click', '.scorecardBtn', function () {
-   currentRow = $(this).closest('tr');
-  currentEndorsementId = $(this).data('id');
-  const traineeName = $(this).data('name');
-
-  $('#scorecardModalLabel').text(`Scorecard: ${traineeName}`);
-  $('#scorecardForm')[0].reset();
-  $('#scoreSummary').empty();
-  $('#scorecardActionBtn').text('Calculate').removeClass('btn-success').addClass('btn-primary');
-  $('#scorecardModal').modal('show');
-
-  // 🔁 Autofill via AJAX
- $.ajax({
-  url: 'get_scorecard.php',
-  method: 'GET',
-  data: { id: currentEndorsementId },
-  dataType: 'json',
-  success: function (data) {
-    if (!data) return;
-
-    // Populate score fields
-    $('[name=call_control]').val(data.call_control || '');
-    $('[name=rebuttals]').val(data.rebuttals || '');
-    $('[name=script_adherence]').val(data.script_adherence || '');
-    $('[name=professionalism]').val(data.professionalism || '');
-    $('[name=closing]').val(data.closing || '');
-    $('[name=product_knowledge]').val(data.product_knowledge || '');
-    $('[name=dialer_howto]').val(data.dialer_how_to || '');
-    $('[name=language]').val(data.language_101 || '');
-
-    // 🔒 Check training status and disable Save if endorsed to deployment
-    $.ajax({
-      url: 'get_training_single_record.php',
-      method: 'GET',
-      data: { id: currentEndorsementId },
-      dataType: 'json',
-      success: function (training) {
-        const actionBtn = $('#scorecardActionBtn');
-        const summary = $('#scoreSummary');
-
-        if (training.trainee_status === 'Endorsed to Deployment') {
-          actionBtn
-            .prop('disabled', true)
-            .addClass('disabled')
-            .text('Locked');
-          summary.html(`
-            <div class="alert alert-warning mt-2">
-              This trainee is already <strong>Endorsed to Deployment</strong>. Scorecard editing is disabled.
-            </div>
-          `);
-        } else {
-          actionBtn
-            .prop('disabled', false)
-            .removeClass('disabled')
-            .text('Calculate');
-        }
-      }
-    });
-  }
-});
-
-});
 
 
- 
-$('#scorecardForm').on('submit', function (e) {
-  e.preventDefault();
-
-  const btn = $('#scorecardActionBtn');
-  const v = name => parseFloat($(`[name=${name}]`).val()) || 0;
-
-  if (btn.text() === 'Calculate') {
-    // 🔢 Do calculations
-    const callControl     = v('call_control');
-    const rebuttals       = v('rebuttals');
-    const scriptAdherence = v('script_adherence');
-    const professionalism = v('professionalism');
-    const closing         = v('closing');
-
-    const mockCallWeights = {
-      callControl: 0.40,
-      rebuttals: 0.25,
-      scriptAdherence: 0.20,
-      professionalism: 0.10,
-      closing: 0.05
-    };
-
-    const partialMockCall = (
-      (callControl / 10) * mockCallWeights.callControl +
-      (rebuttals / 10) * mockCallWeights.rebuttals +
-      (scriptAdherence / 10) * mockCallWeights.scriptAdherence +
-      (professionalism / 10) * mockCallWeights.professionalism +
-      (closing / 10) * mockCallWeights.closing
-    ) * 100;
-
-    const finalMockCall = partialMockCall * 0.40 / 100;
-    const productKnowledge = (v('product_knowledge') / 10) * 0.30;
-    const dialerHowTo      = (v('dialer_howto') / 10) * 0.20;
-    const language         = (v('language') / 10) * 0.10;
-
-    const totalScore = (finalMockCall + productKnowledge + dialerHowTo + language) * 100;
-
-$('#scoreSummary').html(`
-  <div style="background-color: #e6f0ff; color: #0e1e40; padding: 24px; border-radius: 12px; font-family: 'Poppins', sans-serif; border: 1px solid #b3d1ff;">
-    <div style="display: flex; flex-direction: column; gap: 18px;">
-
-      <!-- Partial Mock Call -->
-      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 600;">Partial Mock Call Score</div>
-          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-            ${partialMockCall.toFixed(2)}%
-          </div>
-        </div>
-        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
-          <div style="width: ${partialMockCall}%; height: 100%; background-color: #f36523;"></div>
-        </div>
-      </div>
-
-      <!-- Final Mock Call -->
-      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 600;">Final Mock Call <span style="opacity: 0.7;">(40%)</span></div>
-          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-            ${(finalMockCall * 100).toFixed(2)}%
-          </div>
-        </div>
-        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
-          <div style="width: ${(finalMockCall * 100)}%; height: 100%; background-color: #f36523;"></div>
-        </div>
-      </div>
-
-      <!-- Product Knowledge -->
-      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 600;">Product Knowledge <span style="opacity: 0.7;">(30%)</span></div>
-          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-            ${(productKnowledge * 100).toFixed(2)}%
-          </div>
-        </div>
-        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
-          <div style="width: ${(productKnowledge * 100)}%; height: 100%; background-color: #f36523;"></div>
-        </div>
-      </div>
-
-      <!-- Dialer How-To -->
-      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 600;">Dialer How-To <span style="opacity: 0.7;">(20%)</span></div>
-          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-            ${(dialerHowTo * 100).toFixed(2)}%
-          </div>
-        </div>
-        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
-          <div style="width: ${(dialerHowTo * 100)}%; height: 100%; background-color: #f36523;"></div>
-        </div>
-      </div>
-
-      <!-- Language 101 -->
-      <div style="border-left: 4px solid #0e1e40; padding-left: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-weight: 600;">Language 101 <span style="opacity: 0.7;">(10%)</span></div>
-          <div style="background-color: #ffffff; color: #0e1e40; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #ccdfff;">
-            ${(language * 100).toFixed(2)}%
-          </div>
-        </div>
-        <div style="margin-top: 6px; height: 10px; background-color: #ccdfff; border-radius: 4px; overflow: hidden;">
-          <div style="width: ${(language * 100)}%; height: 100%; background-color: #f36523;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Divider -->
-    <hr style="border-color: #b3d1ff; margin: 1.5rem 0;">
-
-    <!-- Total Score -->
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div style="font-size: 1.3rem; font-weight: bold; color: #f36523;">Total Score</div>
-      <div style="background-color: #f36523; color: #ffffff; padding: 8px 20px; border-radius: 6px; font-weight: bold; font-size: 1.3rem;">
-        ${totalScore.toFixed(2)}%
-      </div>
-    </div>
-  </div>
-`);
-
-
-// 🔁 Change button to "Save" mode
-btn.text('Save').removeClass('btn-primary').addClass('btn-success');
-
-  } else {
-    // 💾 SAVE to database using endorsement_id
-    const postData = {
-      endorsement_id: currentEndorsementId,
-      call_control: v('call_control'),
-      rebuttals: v('rebuttals'),
-      script_adherence: v('script_adherence'),
-      professionalism: v('professionalism'),
-      closing: v('closing'),
-      product_knowledge: v('product_knowledge'),
-      dialer_how_to: v('dialer_howto'),
-      language: v('language')
-    };
-
-    $('#scorecardActionBtn').prop('disabled', true).text('Saving...');
-
-    $.post('save_scorecard.php', postData, function (response) {
-      if (response.status === 'success') {
-        $('#scoreSummary').append(`<div class="alert alert-success mt-3">Score saved successfully!</div>`);
-           $.ajax({
-      url: 'get_training_single_record.php',
-      type: 'GET',
-      data: { id: currentEndorsementId },
-      dataType: 'json',
-      success: function (data) {
-        const table = $('#mergedTable').DataTable();
-       const canCheck = (
-  data.batch &&
-  data.trainee_status === '' &&
-  data.batch !== '0000-00-00 00:00:00' &&
-  data.facilitator === currentTrainer
-);
-
-   const checkboxCell = `
-    <input
-      type="checkbox"
-      class="row-checkbox"
-      value="${data.endorsement_id}"
-      ${canCheck ? '' : 'disabled'}
-    >
-  `;
-
-   const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
- 
-       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00' || !data.trainee_status;
-const scorecardBtn = `
-  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send training schedule to enable scorecard"' : ''}>
-    <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
-      data-id="${data.endorsement_id}" 
-      data-name="${data.name.replace(/"/g, '&quot;')}"
-      ${isDisabled ? 'disabled' : ''}>
-      <i class="fa fa-star"></i>
-    </button>
-  </span>
-`;
-        table.row(currentRow).data([
-          data.source_id,
-          data.date_endorsed,
-          data.name,
-          data.batch,
-          data.ta_credential,
-          data.facilitator,
-          data.day1_attendance === 'Yes'
-  ? '<span class="badge bg-success">Yes</span>'
-  : data.day1_attendance === 'No'
-    ? '<span class="badge bg-danger">No</span>'
-    : '',
-         statusBadge,
-          data.status_date,
-          data.status_remarks,
-          `<div class="d-flex gap-1">
-             <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-        data-id="${data.endorsement_id}" 
-        data-facilitator="${data.facilitator}">
-  <i class="fa fa-edit"></i>
-</button>
-
-            ${scorecardBtn}
-           </div>`,
-            checkboxCell,
-        ]).draw(false);
-      }
-    });
-
-
-    $('#scorecardModal').modal('hide');
-      } else {
-        $('#scoreSummary').append(`<div class="alert alert-danger mt-3">${response.message}</div>`);
-      }
-      $('#scorecardActionBtn').prop('disabled', false).text('Save');
-    }, 'json');
-  }
-});
 
 
 
@@ -813,11 +507,11 @@ $('#editForm').on('submit', function (e) {
   $('#editModal .btn-close').prop('disabled', true);
 
   const formData = $(this).serialize();
-  const sourceId = $('#edit_endorsement_id').val();
+  const Id = $('#edit_id').val();
 
   $.ajax({
     type: 'POST',
-    url: 'update_training.php',
+    url: 'update_deployment.php',
     data: formData,
     dataType: 'json'
   })
@@ -832,66 +526,38 @@ $('#editForm').on('submit', function (e) {
 
     // fetch updated row and redraw
     $.ajax({
-      url: 'get_training_single_record.php',
+      url: 'get_deployment_single_record.php',
       type: 'GET',
-      data: { id: sourceId },
+      data: { id: Id },
       dataType: 'json',
       success: function (data) {
         const table = $('#mergedTable').DataTable();
-       const canCheck = (
-  data.batch &&
-  data.trainee_status === '' &&
-  data.batch !== '0000-00-00 00:00:00' &&
-  data.facilitator === currentTrainer
-);
+     
 
-   const checkboxCell = `
-    <input
-      type="checkbox"
-      class="row-checkbox"
-      value="${data.endorsement_id}"
-      ${canCheck ? '' : 'disabled'}
-    >
-  `;
 
-   const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
+
+   const statusBadge = `<span class="badge ${getFixedColorClass(data.emp_status || 'Pending', statusColorMap)}">${(data.emp_status || 'Pending').toUpperCase()}</span>`;
    
-       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00' || !data.trainee_status;
-const scorecardBtn = `
-  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send training schedule to enable scorecard"' : ''}>
-    <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
-      data-id="${data.endorsement_id}" 
-      data-name="${data.name.replace(/"/g, '&quot;')}"
-      ${isDisabled ? 'disabled' : ''}>
-      <i class="fa fa-star"></i>
-    </button>
-  </span>
-`;
+       
         table.row(currentRow).data([
-          data.source_id,
-          data.date_endorsed,
-          data.name,
-          data.batch,
-          data.ta_credential,
-          data.facilitator,
-          data.day1_attendance === 'Yes'
-  ? '<span class="badge bg-success">Yes</span>'
-  : data.day1_attendance === 'No'
-    ? '<span class="badge bg-danger">No</span>'
-    : '',
+          data.id,
+          data.emp_id,
+          data.employee_name,
+          data.tin,
+          data.sss,
+          data.phic,
+          data.pag_ibig,
+          data.date_hired,
+          data.position,
+          data.campaign,
+          data.cluster,
          statusBadge,
-          data.status_date,
-          data.status_remarks,
           `<div class="d-flex gap-1">
              <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-        data-id="${data.endorsement_id}" 
-        data-facilitator="${data.facilitator}">
+        data-id="${data.id}">
   <i class="fa fa-edit"></i>
 </button>
-
-            ${scorecardBtn}
-           </div>`,
-            checkboxCell,
+    </div>`
         ]).draw(false);
       }
     });
@@ -919,10 +585,6 @@ const scorecardBtn = `
 
 
 
-$('#selectAll').on('change', function() {
-  const checked = this.checked;
-  $('.row-checkbox:not(:disabled)').prop('checked', checked);
-});
 
 
 
@@ -949,147 +611,6 @@ $(function() {
 
 
 
-
-// when user clicks “Send Orientation Schedule”
-$('#endorse_btn').on('click', () => { 
-  // gather all enabled, checked boxes
-  const checked = $('.row-checkbox:checked:not(:disabled)');
-  if (!checked.length) {
-    $('#alertContainer').html(`
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <i class="fa fa-exclamation-triangle me-2"></i>
-        Please select at least one trainee.
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `);
-    return;
-  }
-
-  // build lists of IDs & names
-  const ids = [], names = [];
-  checked.each(function() {
-    ids.push($(this).val());
-    // assume Name is in the 3rd <td> (zero-based index 2)
-    names.push($(this).closest('tr').find('td').eq(2).text());
-  });
-
-  // populate modal list
-  $('#sendList').empty();
-  names.forEach(n => $('#sendList').append(`<li>${n}</li>`));
-
-  // stash IDs on the modal for when they confirm
-  $('#sendEndorsementModal').data('ids', ids).modal('show');
-});
-
-// when they click “Confirm Send”
-$('#confirmSendBtn').on('click', () => {
-  $('#globalLoader').show();
-  const modal = $('#sendEndorsementModal');
-  const ids   = modal.data('ids') || [];
-
-  $('#confirmSendBtn').prop('disabled', true);
-
-  $.ajax({
-    url: 'send_training_schedule.php',
-    method: 'POST',
-    data: { ids },
-    dataType: 'json'
-  })
-  .done(resp => {
-    $('#alertContainer').html(`
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fa fa-check me-2"></i>${resp.message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `);
-
-    // for each selected ID, fetch back its updated row
-    ids.forEach(id => {
-      $.ajax({
-        url: 'get_training_single_record.php',
-        data: { id },
-        dataType: 'json'
-      }).done(data => {
-        // locate the DataTable row by matching source_id
-        const row = table.row(function(idx, rowData) {
-          return parseInt(rowData[0], 10) === parseInt(data.source_id, 10);
-        });
-
-        if (!row.node()) return;
-
-        // rebuild the row array exactly as your table expects:
-        const canCheck = (
-  data.batch &&
-  data.trainee_status === '' &&
-  data.batch !== '0000-00-00 00:00:00' &&
-  data.facilitator === currentTrainer
-);
-        const checkboxCell = `
-    <input
-      type="checkbox"
-      class="row-checkbox"
-      value="${data.endorsement_id}"
-      ${canCheck ? '' : 'disabled'}
-    >
-  `;
-
-  const statusBadge = `<span class="badge ${getFixedColorClass(data.trainee_status || 'Pending', statusColorMap)}">${(data.trainee_status || 'Pending').toUpperCase()}</span>`;
-       const isDisabled = !data.batch || data.batch === '0000-00-00 00:00:00' || !data.trainee_status;
-const scorecardBtn = `
-  <span ${isDisabled ? 'data-bs-toggle="tooltip" title="Assign a batch and send training schedule to enable scorecard"' : ''}>
-    <button class="btn btn-sm scorecardBtn" style="background-color: #f36523; color: #ffffff;"
-      data-id="${data.endorsement_id}" 
-      data-name="${data.name.replace(/"/g, '&quot;')}"
-      ${isDisabled ? 'disabled' : ''}>
-      <i class="fa fa-star"></i>
-    </button>
-  </span>
-`;
-
-
-        row.data([
-         data.source_id,
-          data.date_endorsed,
-          data.name,
-          data.batch,
-          data.ta_credential,
-          data.facilitator,
-          data.day1_attendance === 'Yes'
-  ? '<span class="badge bg-success">Yes</span>'
-  : data.day1_attendance === 'No'
-    ? '<span class="badge bg-danger">No</span>'
-    : '',
-           statusBadge,
-          data.status_date,
-          data.status_remarks,
-          `<div class="d-flex gap-1">
- <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-        data-id="${data.endorsement_id}" 
-        data-facilitator="${data.facilitator}">
-  <i class="fa fa-edit"></i>
-</button>
-
-   ${scorecardBtn}
-</div>`,
-            checkboxCell
-        ]).draw(false);
-      });
-    });
-  })
-  .fail(xhr => {
-    $('#alertContainer').html(`
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fa fa-warning me-2"></i>Error sending emails: ${xhr.responseText}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `);
-  })
-  .always(() => {
-    $('#globalLoader').hide();
-    $('#confirmSendBtn').prop('disabled', false);
-    modal.modal('hide');
-  });
-});
 
 
 
