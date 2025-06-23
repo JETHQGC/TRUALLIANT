@@ -464,7 +464,7 @@ $('#mergedTable').on('click', '.editBtn', function () {
       $('#edit_tin').val(data.tin || '');
       $('#edit_sss').val(data.sss || '');
       $('#edit_phic').val(data.phic || '');
-      $('#edit_pag_ibig').val(data.pag_ibig || '');
+      $('#edit_pagibig').val(data.pag_ibig || '');
       $('#edit_position').val(data.position || '');
       $('#edit_status').val(data.emp_status || '');
 
