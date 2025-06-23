@@ -1,9 +1,15 @@
-<!-- HEADER WITH ANIMATED STARFIELD -->
-<header class="navbar navbar-expand-lg navbar-dark px-3 position-relative d-flex justify-content-between align-items-center"
-        style="height: 70px; background: linear-gradient(to right, #0e1e40, rgb(59, 69, 88), #0e1e40); font-family: 'Poppins', sans-serif;">
+<!-- HEADER WITH STARFIELD + CORNER ORBITING EFFECT -->
+<header class="navbar navbar-expand-lg navbar-dark px-3 d-flex justify-content-between align-items-center header-with-orbits"
+        style="height: 70px; background: linear-gradient(to right, #0e1e40, rgb(59, 69, 88), #0e1e40); font-family: 'Poppins', sans-serif; position: fixed; top: 0; left: 0; width: 100%; z-index: 1050;">
 
   <!-- Starfield Background Layer -->
   <div class="starfield"></div>
+
+  <!-- Orbit Elements -->
+  <div class="header-orb orb-top-left"></div>
+  <div class="header-orb orb-top-right"></div>
+  <div class="header-orb orb-bottom-left"></div>
+  <div class="header-orb orb-bottom-right"></div>
 
   <!-- Brand -->
   <a href="dashboard.php" class="navbar-brand d-flex align-items-center position-relative" style="z-index: 2;">
@@ -41,8 +47,13 @@
   </div>
 </header>
 
-<!-- STARFIELD BACKGROUND STYLE -->
+<!-- ORBIT + STARFIELD STYLES -->
 <style>
+  body {
+    margin: 0;
+    padding-top: 70px; /* Offset for fixed header */
+  }
+
   .starfield {
     position: absolute;
     top: 0; left: 0;
@@ -68,6 +79,51 @@
     100% {
       background-position: 1000px 500px, 1050px 525px, 1100px 550px;
     }
+  }
+
+  /* Orbiting Corners */
+  .header-orb {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    animation: orbitHeader 6s linear infinite;
+    z-index: 1;
+  }
+
+  .orb-top-left {
+    top: 5px;
+    left: 5px;
+    transform-origin: top left;
+    animation-delay: 0s;
+  }
+
+  .orb-top-right {
+    top: 5px;
+    right: 5px;
+    transform-origin: top right;
+    animation-delay: 1.5s;
+  }
+
+  .orb-bottom-left {
+    bottom: 5px;
+    left: 5px;
+    transform-origin: bottom left;
+    animation-delay: 3s;
+  }
+
+  .orb-bottom-right {
+    bottom: 5px;
+    right: 5px;
+    transform-origin: bottom right;
+    animation-delay: 4.5s;
+  }
+
+  @keyframes orbitHeader {
+    0%   { transform: rotate(0deg) translateX(15px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(15px) rotate(-360deg); }
   }
 </style>
 
