@@ -1,7 +1,6 @@
 /* Sidebar container */
 .position-sticky {
-
-  background-color: #0e1e40;
+  background: linear-gradient(to bottom, #0e1e40, rgb(59, 69, 88), #0e1e40);
   color: white;
   font-family: 'Poppins', sans-serif;
   border-radius: 12px;
@@ -10,12 +9,6 @@
   overflow-y: auto; /* scrolls internally if its own content is long */
   height: 100%;
 }
-
-
-
-
-
-
 
 /* Base nav link styling */
 .nav-link {
