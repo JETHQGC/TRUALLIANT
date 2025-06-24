@@ -51,115 +51,109 @@ include 'includes/recruiter_names.php';
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
-  <div class="row gx-4">
+  <div class="row gx-3">
+
     <!-- Source Info Panel -->
-   <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-3">
       <div class="card border-0 shadow-sm h-100">
-           <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Source Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
-        <div class="card-body">
-          <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted">ID</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_id" name="source_id">
-            </dd>
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white" style="font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">
+            Source Information <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
+        <div class="card-body p-3 pt-2">
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">ID</label>
+            <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_source_id" name="source_id">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Source Date</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_date" name="source_date">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Source Date</label>
+            <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_source_date" name="source_date">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Sourced By</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_source_by" name="source_by">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Sourced By</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_source_by" name="source_by">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Scheduled Interview</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_scheduled_interview" name="scheduled_interview">
-            </dd>
-             <dt class="col-sm-4 text-muted">Source Status</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_status" name="status">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Scheduled Interview</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_scheduled_interview" name="scheduled_interview">
+          </div>
 
-            
-          </dl>
+          <div class="mb-1">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Source Status</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_status" name="status">
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Personal Info Panel -->
-        <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-3">
       <div class="card border-0 shadow-sm h-100">
-          <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Personal Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
-        <div class="card-body">
-          <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted">Name</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_name" name="name">
-            </dd>
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white" style="font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">
+            Personal Information <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
+        <div class="card-body p-3 pt-2">
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Name</label>
+            <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_name" name="name">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Phone</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_phone" name="phone">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Phone</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_phone" name="phone">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Age</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_age" name="age">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Age</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_age" name="age">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Birthdate</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_birthdate" name="birthdate">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Birthdate</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_birthdate" name="birthdate">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Email</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_email" name="email">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Email</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_email" name="email">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Address</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_address" name="address">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Address</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_address" name="address">
+          </div>
 
-            <dt class="col-sm-4 text-muted">City / Municipality</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_city_municipality" name="city_municipality">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">City / Municipality</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_city_municipality" name="city_municipality">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Education</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_educational_attainment" name="educational_attainment">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Education</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_educational_attainment" name="educational_attainment">
+          </div>
 
-            <dt class="col-sm-4 text-muted">School</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_name_of_school" name="name_of_school">
-            </dd>
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">School</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_name_of_school" name="name_of_school">
+          </div>
 
-            <dt class="col-sm-4 text-muted">Year Last Attended</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_year_last_attended" name="year_last_attended">
-            </dd>
-          </dl>
+          <div class="mb-1">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Year Last Attended</label>
+            <input readonly type="text" class="form-control form-control-sm" id="edit_year_last_attended" name="year_last_attended">
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
-
 
 
             <!-- INTERVIEW TAB -->

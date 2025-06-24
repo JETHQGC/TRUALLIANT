@@ -56,108 +56,92 @@ include 'includes/recruiter_names.php';
 
      
     </style>
-
+    
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
-  <div class="row gx-4">
-    <!-- Source Info Panel -->
-   <div class="col-md-6 mb-4">
-      <div class="card border-0 shadow-sm h-100">
-         <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Source Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
-        <div class="card-body">
-          <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted"><strong>ID</strong></dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_id" name="source_id">
-            </dd>
+  <div class="row g-3"><!-- g-3 = tighter row gap -->
 
-                        <dt class="col-sm-4 text-muted"><strong>Source Date</strong></dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_source_date" name="source_date">
-            </dd>
-
-            <dt class="col-sm-4 text-muted"><strong>Sourced By</strong></dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_source_by" name="source_by">
-            </dd>
-            
-
-          </dl>
+    <!-- Endorsement Information -->
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white" style="font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">
+            Endorsement Information <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
+        <div class="card-body p-3 pt-2">
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">ID</label>
+            <input type="text" readonly class="form-control form-control-sm fw-bold" value="21">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Endorsement ID</label>
+            <input type="text" readonly class="form-control form-control-sm fw-bold" value="13">
+          </div>
+          <div class="mb-1">
+            <label class="form-label mb-1 text-muted">Endorsement Date</label>
+            <input type="text" readonly class="form-control form-control-sm fw-bold" value="2025-06-15">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Personal Info Panel -->
-<div class="col-md-6 mb-4">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-      <h6 class="mb-0 text-white" style="font-weight: 600; letter-spacing: 0.3px;">
-        Personal Information
-        <span style="color: #f36523;">●</span>
-      </h6>
-    </div>
-        <div class="card-body">
-          <dl class="row mb-0" id="detailsTab">
-            <dt class="col-sm-4 text-muted">Name</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext fw-bold" id="edit_name" name="name">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Phone</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_phone" name="phone">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Age</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_age" name="age">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Birthdate</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_birthdate" name="birthdate">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Email</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_email" name="email">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Address</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_address" name="address">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">City / Municipality</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_city_municipality" name="city_municipality">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Education</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_educational_attainment" name="educational_attainment">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">School</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_name_of_school" name="name_of_school">
-            </dd>
-
-            <dt class="col-sm-4 text-muted">Year Last Attended</dt>
-            <dd class="col-sm-8">
-              <input readonly type="text" class="form-control-plaintext" id="edit_year_last_attended" name="year_last_attended">
-            </dd>
-          </dl>
+    <!-- Personal Information -->
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white" style="font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">
+            Personal Information <span style="color: #f36523;">●</span>
+          </h6>
+        </div>
+        <div class="card-body p-3 pt-2">
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Name</label>
+            <input type="text" readonly class="form-control form-control-sm fw-bold" value="Reynor Merzo">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Phone</label>
+            <input type="text" readonly class="form-control form-control-sm" value="09391234567">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Age</label>
+            <input type="text" readonly class="form-control form-control-sm" value="22">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Birthdate</label>
+            <input type="text" readonly class="form-control form-control-sm" value="2025-06-11">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Email</label>
+            <input type="text" readonly class="form-control form-control-sm" value="reynormerzo.qgc@">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Address</label>
+            <input type="text" readonly class="form-control form-control-sm" value="Oton">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">City / Municipality</label>
+            <input type="text" readonly class="form-control form-control-sm" value="Iloilo City">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">Education</label>
+            <input type="text" readonly class="form-control form-control-sm" value="Not Qualified">
+          </div>
+          <div class="mb-2">
+            <label class="form-label mb-1 text-muted">School</label>
+            <input type="text" readonly class="form-control form-control-sm" value="WVSU">
+          </div>
+          <div class="mb-1">
+            <label class="form-label mb-1 text-muted">Year Last Attended</label>
+            <input type="text" readonly class="form-control form-control-sm" value="2019">
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
+
 
 
 

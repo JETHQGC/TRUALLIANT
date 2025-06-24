@@ -57,83 +57,91 @@
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
-  <div class="row gx-4">
+  <div class="row gx-3">
 
     <!-- Endorsement Information -->
-    <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-3">
       <div class="card shadow-sm border-0 h-100">
-        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-          <h6 class="mb-0 text-white fw-semibold">
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white fw-semibold" style="font-size: 14px;">
             Endorsement Information <span style="color: #f36523;">●</span>
           </h6>
         </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label text-muted">ID</label>
-            <input readonly type="text" class="form-control fw-bold" id="edit_source_id" name="source_id">
+        <div class="card-body p-3 pt-2">
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">ID</label>
+            <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_source_id" name="source_id">
           </div>
-          <div class="mb-3">
-            <label class="form-label text-muted">Endorsement ID</label>
-            <input readonly type="text" class="form-control fw-bold" id="edit_endorsement_id" name="endorsement_id">
+          <div class="mb-2">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Endorsement ID</label>
+            <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_endorsement_id" name="endorsement_id">
           </div>
-          <div class="mb-3">
-            <label class="form-label text-muted">Endorsement Date</label>
-            <input readonly type="text" class="form-control fw-bold" id="edit_date_endorsed" name="date_endorsed">
+          <div class="mb-1">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Endorsement Date</label>
+            <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_date_endorsed" name="date_endorsed">
           </div>
         </div>
       </div>
     </div>
 
     <!-- Personal Information -->
-    <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-3">
       <div class="card shadow-sm border-0 h-100">
-        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-          <h6 class="mb-0 text-white fw-semibold">
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white fw-semibold" style="font-size: 14px;">
             Personal Information <span style="color: #f36523;">●</span>
           </h6>
         </div>
-        <div class="card-body">
+        <div class="card-body p-3 pt-2">
           <div class="row">
-            <div class="col-md-6 mb-3">
-            <label class="form-label text-muted">Name</label>
-            <input readonly type="text" class="form-control fw-bold" id="edit_name" name="name" style="font-size: 0.81rem;">
-          </div>
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Name</label>
+              <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_name" name="name">
+            </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Phone</label>
-              <input readonly type="text" class="form-control" id="edit_phone" name="phone">
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Phone</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_phone" name="phone">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Age</label>
-              <input readonly type="text" class="form-control" id="edit_age" name="age">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Age</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_age" name="age">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Birthdate</label>
-              <input readonly type="text" class="form-control" id="edit_birthdate" name="birthdate">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Birthdate</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_birthdate" name="birthdate">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Email</label>
-              <input readonly type="text" class="form-control" id="edit_email" name="email"  style="font-size: 0.81rem;">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Email</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_email" name="email">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Address</label>
-              <input readonly type="text" class="form-control" id="edit_address" name="address">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Address</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_address" name="address">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">City / Municipality</label>
-              <input readonly type="text" class="form-control" id="edit_city_municipality" name="city_municipality">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">City / Municipality</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_city_municipality" name="city_municipality">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Education</label>
-              <input readonly type="text" class="form-control" id="edit_educational_attainment" name="educational_attainment">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Education</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_educational_attainment" name="educational_attainment">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">School</label>
-              <input readonly type="text" class="form-control" id="edit_name_of_school" name="name_of_school">
+
+            <div class="col-md-6 mb-2">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">School</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_name_of_school" name="name_of_school">
             </div>
-            <div class="col-md-6 mb-0">
-              <label class="form-label text-muted">Year Last Attended</label>
-              <input readonly type="text" class="form-control" id="edit_year_last_attended" name="year_last_attended">
+
+            <div class="col-md-6 mb-1">
+              <label class="form-label text-muted mb-1" style="font-size: 13px;">Year Last Attended</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_year_last_attended" name="year_last_attended">
             </div>
           </div>
         </div>
