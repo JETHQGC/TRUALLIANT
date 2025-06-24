@@ -4,6 +4,8 @@
 <?php include 'includes/scripts.php'; ?>
 
 
+
+
 <div id="globalLoader" class="global-loader">
   <div class="loader-content text-center">
     <img src="images/Trualliant.gif" alt="Loading..." style="width: 200px;">
@@ -83,11 +85,23 @@
 // assumes session.php has set $user['name'], but we no longer filter by recruiter here
 
 $sql = "
-    SELECT employee.*, campaign.assigned_date, campaign.removal_reason, campaign.recommendation, campaign.campaign, campaign.cluster
-    FROM employee
-    LEFT JOIN campaign ON employee.id = campaign.employee_id
-    ORDER BY employee.id DESC
+  SELECT 
+    e.*,
+    c.campaign,
+    c.cluster,
+    c.assigned_date,
+    c.recommendation,
+    c.removal_reason
+  FROM employee e
+  LEFT JOIN campaign c ON c.employee_id = e.id
+  AND c.assigned_date = (
+    SELECT MAX(c2.assigned_date)
+    FROM campaign c2
+    WHERE c2.employee_id = e.id
+  )
+  ORDER BY e.id DESC
 ";
+
 
 
 
@@ -188,16 +202,20 @@ function getFixedColorClass($value, $map) {
 <section>
           <div class="card mt-3 mx-3 my-3" style="border-top: 4px solid #0e1e40;">
 
-        <div class="card-header bg-white border-bottom d-flex align-items-center">
-  <span class="fw-semibold" style="color: #0e1e40;">Records</span>
-  <div class="ms-auto d-flex gap-2">
-    <!-- Send Orientation Schedule -->
-  
-
-    <!-- Mark as Present (start disabled) -->
-  
-  </div>
-</div>
+   <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                <span class="fw-semibold" style="color: #0e1e40;">Records</span>
+          <!-- Start: + New Button with Inline Hover Effect -->
+<button class="btn btn-sm fw-bold"
+  style="color: #0e1e40; border: 1px solid #0e1e40; background-color: #ffffff; border-radius: 8px;"
+  data-bs-toggle="modal"
+  data-bs-target="#addCampaignModal"
+  onmouseover="this.style.backgroundColor='#0e1e40'; this.style.color='white';"
+  onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#0e1e40';">
+  -> Transfer Employee
+</button>
+<!-- End: + New Button with Inline Hover Effect -->
+            </div>
+        
 
 
 
@@ -248,16 +266,22 @@ function getFixedColorClass($value, $map) {
     <?= strtoupper(!empty($row['emp_status']) ? $row['emp_status'] : 'Pending') ?>
   </span></td>
           
-          <td>
-         <div class="d-flex gap-1">
-  <!-- Edit Button -->
-  <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;" 
-    data-id="<?= $row['id'] ?>">
-    
-    <i class="fa fa-edit"></i>
-  </button>
-</div>
-         </td>
+         <td>
+  <div class="d-flex gap-1">
+    <!-- Edit Button -->
+    <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
+      data-id="<?= $row['id'] ?>">
+      <i class="fa fa-edit"></i>
+    </button>
+
+    <!-- History Button -->
+    <button class="btn btn-sm historyBtn" style="background-color: #ff5722; color: #ffffff;"
+      data-id="<?= $row['id'] ?>" title="View History">
+      <i class="fa fa-clock-rotate-left"></i>
+    </button>
+  </div>
+</td>
+
 
         </tr>
 
@@ -290,10 +314,12 @@ function getFixedColorClass($value, $map) {
 
 <!-- Edit Modal -->
   <?php include 'includes/edit_deployment_modal.php'; ?>
+ard_modal.php'; ?>
+  
+<?php include 'includes/add_campaign_modal.php'; ?>
+  <?php include 'includes/history_modal.php'; ?>
 
- <?php include 'includes/send_training_schedule_modal.php'; ?>
-  <?php include 'includes/edit_scorecard_modal.php'; ?>
-
+  
 
 
 
@@ -488,6 +514,51 @@ $('#mergedTable').on('click', '.editBtn', function () {
 
 
 
+$('#mergedTable').on('click', '.historyBtn', function () {
+  const empId = $(this).data('id');
+
+  $.ajax({
+    url: 'get_deployment_history.php', // ← you need to create this endpoint
+    type: 'GET',
+    data: { id: empId },
+    dataType: 'json',
+    success: function (response) {
+      $('#historyName').text(response.employee_name || 'Employee');
+      $('#historyEmpId').text(response.emp_id || '—');
+      $('#historyStatus').text(response.emp_status || '—');
+      $('#historyCampaign').text(response.campaign || '—');
+      $('#historyDate').text(response.assigned_date || '—');
+
+      const timeline = $('#historyTimeline');
+      timeline.empty();
+
+      response.history.forEach(entry => {
+        const entryHtml = `
+          <div class="timeline-entry">
+            <div class="card p-3">
+              <div class="d-flex justify-content-between">
+                <div class="fw-semibold">${entry.title}</div>
+                <small class="text-muted">${entry.date}</small>
+              </div>
+              <div class="mt-1">${entry.description}</div>
+              ${entry.meta ? `<div class="mt-2 small text-muted">${entry.meta}</div>` : ''}
+            </div>
+          </div>
+        `;
+        timeline.append(entryHtml);
+      });
+
+      $('#historyModal').modal('show');
+    },
+    error: function () {
+      alert('Failed to load deployment history.');
+    }
+  });
+});
+
+
+
+
 
 
 
@@ -553,11 +624,19 @@ $('#editForm').on('submit', function (e) {
           data.cluster,
          statusBadge,
           `<div class="d-flex gap-1">
-             <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
-        data-id="${data.id}">
-  <i class="fa fa-edit"></i>
-</button>
-    </div>`
+  <!-- Edit Button -->
+  <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
+    data-id="${data.id}" data-bs-toggle="tooltip" title="Edit">
+    <i class="fa fa-edit"></i>
+  </button>
+
+  <!-- History Button -->
+  <button class="btn btn-sm historyBtn" style="background-color: #ff5722; color: #ffffff;"
+    data-id="${data.id}" data-bs-toggle="tooltip" title="View History">
+    <i class="fa fa-clock-rotate-left"></i>
+  </button>
+</div>
+`
         ]).draw(false);
       }
     });
@@ -582,6 +661,109 @@ $('#editForm').on('submit', function (e) {
 });
 
 
+
+$('#addForm').on('submit', function (e) {
+  e.preventDefault();
+
+  // 1) Show loader
+  $('#globalLoader').show();
+
+  // 2) Disable modal buttons
+  $('#addCancelBtn, #addSaveBtn').prop('disabled', true);
+  $('#addCampaignModal .btn-close').prop('disabled', true);
+
+  const formData = $(this).serialize();
+
+  $.ajax({
+    type: 'POST',
+    url: 'add_campaign.php',
+    data: formData,
+    dataType: 'json'
+  })
+  .done(function (response) {
+    if (response.status === 'success') {
+      $('#alertContainer').html(`
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="fa fa-check me-2"></i><strong>Success:</strong> ${response.message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `);
+
+      // Fetch updated campaign record
+      $.ajax({
+        url: 'get_deployment_single_record.php',
+        type: 'GET',
+        data: { id: response.employee_id },
+        dataType: 'json',
+        success: function (data) {
+          const table = $('#mergedTable').DataTable();
+
+          // Find existing row with the same employee ID
+          const rowIndex = table.rows().eq(0).filter(function (idx) {
+            return table.cell(idx, 0).data() == data.id; // Adjust to column index where emp_id appears
+          });
+
+          const statusBadge = `<span class="badge ${getFixedColorClass(data.emp_status || 'Pending', statusColorMap)}">${(data.emp_status || 'Pending').toUpperCase()}</span>`;
+
+          if (rowIndex.length > 0) {
+            table.row(rowIndex[0]).data([
+              data.id,
+              data.emp_id,
+              data.employee_name,
+              data.tin,
+              data.sss,
+              data.phic,
+              data.pag_ibig,
+              data.date_hired,
+              data.position,
+              data.campaign,
+              data.cluster,
+              statusBadge,
+              `<div class="d-flex gap-1">
+  <!-- Edit Button -->
+  <button class="btn btn-sm editBtn" style="background-color: #0e1e40; color: #ffffff;"
+    data-id="${data.id}" data-bs-toggle="tooltip" title="Edit">
+    <i class="fa fa-edit"></i>
+  </button>
+
+  <!-- History Button -->
+  <button class="btn btn-sm historyBtn" style="background-color: #ff5722; color: #ffffff;"
+    data-id="${data.id}" data-bs-toggle="tooltip" title="View History">
+    <i class="fa fa-clock-rotate-left"></i>
+  </button>
+</div>
+`
+            ]).draw(false);
+          }
+
+          $('#addCampaignModal').modal('hide');
+          $('#addForm')[0].reset();
+        }
+      });
+    } else {
+      $('#alertContainer').html(`
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fa fa-warning me-2"></i><strong>Error:</strong> ${response.message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `);
+    }
+  })
+  .fail(function (xhr) {
+    $('#alertContainer').html(`
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fa fa-warning me-2"></i><strong>Error:</strong> ${xhr.responseText}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    `);
+  })
+  .always(function () {
+    // 5) Re-enable modal controls
+    $('#globalLoader').hide();
+    $('#addCancelBtn, #addSaveBtn').prop('disabled', false);
+    $('#addCampaignModal .btn-close').prop('disabled', false);
+  });
+});
 
 
 

@@ -1,0 +1,39 @@
+.timeline {
+  position: relative;
+  margin-left: 20px;
+  border-left: 2px solid #dee2e6;
+  padding-left: 20px;
+}
+
+.timeline-entry {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: -11px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #0e1e40;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.timeline-entry .card {
+  background: #f8f9fa;
+  border-left: 4px solid #0e1e40;
+}
+
+.timeline-entry .badge {
+  font-size: 0.7rem;
+}
+
+
+#historyTimeline {
+  max-height: 400px; /* Adjust as needed */
+  overflow-y: auto;
+  padding-right: 10px; /* Optional: space for scrollbar */
+}
