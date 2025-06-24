@@ -39,7 +39,7 @@
             <li class="nav-item" role="presentation">
               <button class="nav-link" data-bs-toggle="tab" data-bs-target="#interviewTab" type="button" role="tab"
                 style="color: #0e1e40; font-weight: 600; border-bottom: 3px solid transparent; background-color: transparent;">
-                Training
+                Deployment
               </button>
             </li>
           </ul>
