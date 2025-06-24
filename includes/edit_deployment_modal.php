@@ -57,51 +57,55 @@
 
 <!-- DETAILS TAB -->
 <div class="tab-pane fade show active" id="detailsTab" role="tabpanel">
-  <div class="row gx-4">
-
-
+  <div class="row gx-3">
 
     <!-- Personal Information -->
-    <div class="col-md-12 mb-4">
+    <div class="col-md-12 mb-3">
       <div class="card shadow-sm border-0 h-100">
-        <div class="card-header py-2" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-          <h6 class="mb-0 text-white fw-semibold">
+        <div class="card-header py-2 px-3" style="background-color: #0e1e40; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+          <h6 class="mb-0 text-white fw-semibold" style="font-size: 14px;">
             Personal Information <span style="color: #f36523;">●</span>
           </h6>
         </div>
-        <div class="card-body">
+        <div class="card-body p-3 pt-2">
           <div class="row">
 
-            
-<div class="col-md-6 mb-3" style="display: none;">
-  <label class="form-label text-muted">ID</label>
-  <input readonly type="text" class="form-control" id="edit_id" name="id">
-</div>
-
-
-            <div class="col-md-6 mb-3">
-            <label class="form-label text-muted">Name</label>
-            <input readonly type="text" class="form-control fw-bold" id="edit_name" name="name" style="font-size: 0.81rem;">
-          </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Phone</label>
-              <input readonly type="text" class="form-control" id="edit_phone" name="phone">
+            <!-- Hidden ID Field -->
+            <div class="col-md-6 mb-2" style="display: none;">
+              <label class="form-label mb-1 text-muted" style="font-size: 13px;">ID</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_id" name="id">
             </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Birthdate</label>
-              <input readonly type="text" class="form-control" id="edit_birthdate" name="birthdate">
+            <!-- Name -->
+            <div class="col-md-6 mb-2">
+              <label class="form-label mb-1 text-muted" style="font-size: 13px;">Name</label>
+              <input readonly type="text" class="form-control form-control-sm fw-bold" id="edit_name" name="name">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Email</label>
-              <input readonly type="text" class="form-control" id="edit_email" name="email"  style="font-size: 0.81rem;">
+
+            <!-- Phone -->
+            <div class="col-md-6 mb-2">
+              <label class="form-label mb-1 text-muted" style="font-size: 13px;">Phone</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_phone" name="phone">
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label text-muted">Address</label>
-              <input readonly type="text" class="form-control" id="edit_address" name="address">
+
+            <!-- Birthdate -->
+            <div class="col-md-6 mb-2">
+              <label class="form-label mb-1 text-muted" style="font-size: 13px;">Birthdate</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_birthdate" name="birthdate">
             </div>
-           
+
+            <!-- Email -->
+            <div class="col-md-6 mb-2">
+              <label class="form-label mb-1 text-muted" style="font-size: 13px;">Email</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_email" name="email">
+            </div>
+
+            <!-- Address -->
+            <div class="col-md-6 mb-1">
+              <label class="form-label mb-1 text-muted" style="font-size: 13px;">Address</label>
+              <input readonly type="text" class="form-control form-control-sm" id="edit_address" name="address">
+            </div>
+
           </div>
         </div>
       </div>
@@ -109,6 +113,7 @@
 
   </div>
 </div>
+
 
 
 
