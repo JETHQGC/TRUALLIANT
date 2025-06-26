@@ -19,8 +19,9 @@ $can_work_onsite           = $_POST['can_work_onsite']         ?? '';
 $fully_vaccinated          = $_POST['fully_vaccinated']        ?? '';
 $currently_studying        = $_POST['currently_studying']      ?? '';
 $initial_interview         = $_POST['initial_interview']       ?? '';
-$second_call_attempt       = $_POST['second_call_attempt']     ?? null;
-$third_call_attempt        = $_POST['third_call_attempt']      ?? null;
+$second_call_attempt = !empty($_POST['second_call_attempt']) ? $_POST['second_call_attempt'] : null;
+$third_call_attempt  = !empty($_POST['third_call_attempt'])  ? $_POST['third_call_attempt']  : null;
+
 
 try {
   // Check if record exists
