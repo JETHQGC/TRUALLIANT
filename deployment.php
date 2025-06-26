@@ -233,10 +233,6 @@ function getFixedColorClass($value, $map) {
         <th>No.</th>
         <th>Emp ID</th>
         <th>Name</th>
-        <th>TIN</th>
-        <th>SSS</th>
-        <th>PHIC</th>
-        <th>HDMF</th>
         <th>Date Hired</th>
         <th>Position</th>
         <th>Campaign</th>
@@ -253,10 +249,6 @@ function getFixedColorClass($value, $map) {
           <td><?= $row['id'] ?></td>
           <td><?= $row['emp_id'] ?></td>
           <td><?= htmlspecialchars($row['employee_name'], ENT_QUOTES) ?></td>
-          <td><?= htmlspecialchars($row['tin'], ENT_QUOTES) ?></td>
-          <td><?= htmlspecialchars($row['sss'], ENT_QUOTES) ?></td>
-          <td><?= htmlspecialchars($row['phic'], ENT_QUOTES) ?></td>
-          <td><?= htmlspecialchars($row['pag_ibig'], ENT_QUOTES) ?></td>
           <td><?= $row['date_hired'] ?></td>
           <td><?= htmlspecialchars($row['position'], ENT_QUOTES) ?></td>
           <td><?= htmlspecialchars($row['campaign'], ENT_QUOTES) ?></td>
@@ -314,7 +306,7 @@ function getFixedColorClass($value, $map) {
 
 <!-- Edit Modal -->
   <?php include 'includes/edit_deployment_modal.php'; ?>
-ard_modal.php'; ?>
+
   
 <?php include 'includes/add_campaign_modal.php'; ?>
   <?php include 'includes/history_modal.php'; ?>
@@ -614,10 +606,6 @@ $('#editForm').on('submit', function (e) {
           data.id,
           data.emp_id,
           data.employee_name,
-          data.tin,
-          data.sss,
-          data.phic,
-          data.pag_ibig,
           data.date_hired,
           data.position,
           data.campaign,
@@ -710,10 +698,6 @@ $('#addForm').on('submit', function (e) {
               data.id,
               data.emp_id,
               data.employee_name,
-              data.tin,
-              data.sss,
-              data.phic,
-              data.pag_ibig,
               data.date_hired,
               data.position,
               data.campaign,
