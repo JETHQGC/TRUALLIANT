@@ -267,23 +267,23 @@ function getFixedColorClass($value, $map) {
     class="row-checkbox"
     value="<?= $row['source_id'] ?>"
     <?= (
-      empty($row['shift']) ||
-      empty($row['recruiter']) ||
-      empty($row['facilitator']) ||
-      empty($row['confirmation']) ||
-      empty($row['second_confirmation']) ||
-      empty($row['emergency_contact_person']) ||
-      empty($row['emergency_contact_number']) ||
-      empty($row['emergency_contact_address']) ||
-      $row['confirmation'] !== 'Confirmed' ||
-      $row['second_confirmation'] !== 'Confirmed' ||
-      empty($row['signed_contract']) ||
-      $row['signed_contract'] !== 'Yes' ||
-      empty($row['date_endorsed']) ||
-      $row['date_endorsed'] !== '0000-00-00' ||
-      $row['recruiter'] !== $user['name']
-    ) ? 'disabled' : '' ?>
-  >
+  empty($row['shift']) ||
+  empty($row['recruiter']) ||
+  empty($row['facilitator']) ||
+  empty($row['confirmation']) ||
+  empty($row['second_confirmation']) ||
+  empty($row['emergency_contact_person']) ||
+  empty($row['emergency_contact_number']) ||
+  empty($row['emergency_contact_address']) ||
+  $row['confirmation'] !== 'Confirmed' ||
+  $row['second_confirmation'] !== 'Confirmed' ||
+  empty($row['signed_contract']) ||
+  $row['signed_contract'] !== 'Yes' ||
+  !empty($row['date_endorsed']) && $row['date_endorsed'] !== '0000-00-00' ||  // disable if already endorsed
+  $row['recruiter'] !== $user['name']
+) ? 'disabled' : '' ?>
+>
+
 </td>
 
 
@@ -554,7 +554,11 @@ $('#editForm').on('submit', function (e) {
   data.date_endorsed &&
   data.signed_contract &&
   data.signed_contract === 'Yes' &&
-  data.date_endorsed == '0000-00-00' &&
+  (
+    data.date_endorsed === null ||
+    data.date_endorsed === '' ||
+    data.date_endorsed === '0000-00-00'
+  ) &&
   data.recruiter === currentRecruiter
 );
 
@@ -731,8 +735,11 @@ $('#confirmSendBtn').on('click', () => {
   data.second_confirmation === 'Confirmed' &&
   data.signed_contract &&
   data.signed_contract === 'Yes' &&
-  data.date_endorsed &&
-  data.date_endorsed == '0000-00-00' &&
+ (
+    data.date_endorsed === null ||
+    data.date_endorsed === '' ||
+    data.date_endorsed === '0000-00-00'
+  ) &&
   data.recruiter === currentRecruiter
 );
         const checkboxCell = `
