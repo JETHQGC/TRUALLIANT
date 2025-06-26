@@ -64,8 +64,8 @@ if ($trainee_status === 'Endorsed to Deployment' && $existing_status !== 'Endors
                 INSERT INTO employee (
                     emp_id, employee_name, birthdate, address, mobile_no,
                     email_address, tin, sss, phic, pag_ibig,
-                    date_hired, department, position, emp_status
-                ) VALUES (?, ?, ?, ?, ?, ?, '', '', '', '', ?, '', '', ?)
+                    date_hired, position, emp_status
+                ) VALUES (?, ?, ?, ?, ?, ?, '', '', '', '', ?, '', ?)
             ");
             $insert->bind_param(
                 "ssssssss", // 8 variables
