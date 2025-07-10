@@ -60,7 +60,7 @@
           <hr class="my-4">
 
           <!-- Source Info -->
-          <h6 class="text-primary fw-semibold mb-3">Source Info</h6>
+          <h6 class="text-primary fw-semibold mb-3">Assign</h6>
           <div class="row g-3">
 
             <div class="col-md-6 d-flex">
