@@ -23,7 +23,7 @@
     <?php include 'includes/menubar.php'; ?>
   </div>
 </div>
-
+ 
 <!-- Page Wrapper -->
 <div class="d-flex flex-column min-vh-100">
   <div class="container-fluid flex-grow-1 d-flex flex-column">
